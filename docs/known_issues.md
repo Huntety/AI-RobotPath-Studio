@@ -9,3 +9,8 @@
 - URDF: fixed/revolute/continuous/prismatic tree를 지원한다. mimic/floating/planar,
   xacro, DTD/entity, 원격 mesh는 오류로 거부한다. STL/OBJ 및 명시적 package 매핑만 지원한다.
 - URDF inertial/dynamics/transmission은 Phase 1에서 사용하지 않는다.
+- mesh당 100MB/200만 삼각형 제한. GUI는 package://를 자동 추정하지 않는다.
+- TCP GUI 변경은 세션에만 유지된다. 장면 저장/Undo/Redo는 Phase 2 범위이다.
+- continuous 조그 창은 ±180°이다. 실제 다회전 관절 운전/제어기 의미는 미지원이다.
+- 독립 exe는 현재 PC에서만 확인한다. 다른 GPU/Windows 환경은 검증하지 않았다.
+- Windows GUI CI는 workflow_dispatch 전용이다. 자동 CI는 핵심 모듈을 검사한다.

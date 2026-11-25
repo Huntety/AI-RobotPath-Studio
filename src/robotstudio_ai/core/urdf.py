@@ -119,8 +119,11 @@ def load_urdf(
     path = Path(path).resolve()
     if path.stat().st_size > 10_000_000:
         raise ValueError("URDF exceeds 10 MB size limit")
-    content = path.read_bytes()
-    if b"<!DOCTYPE" in content.upper() or b"<!ENTITY" in content.upper():
+    try:
+        content = path.read_text(encoding="utf-8-sig")
+    except UnicodeDecodeError as error:
+        raise ValueError("URDF must be UTF-8 encoded") from error
+    if "<!DOCTYPE" in content.upper() or "<!ENTITY" in content.upper():
         raise ValueError("DTD and XML entities are not supported")
     try:
         robot = ET.fromstring(content)
@@ -167,8 +170,8 @@ def load_urdf(
         axis_node = element.find("axis")
         axis = numbers("1 0 0" if axis_node is None else required(axis_node, "xyz"), 3)
         norm = float(np.linalg.norm(axis))
-        if kind != "fixed" and norm < 1e-12:
-            raise ValueError(f"{joint_name}: axis cannot be zero")
+        if kind != "fixed" and (not np.isfinite(norm) or norm < 1e-12):
+            raise ValueError(f"{joint_name}: axis norm must be finite and nonzero")
         axis = tuple(v / norm for v in axis) if norm > 0 else (1.0, 0.0, 0.0)
         lower = upper = velocity = None
         if kind != "fixed":

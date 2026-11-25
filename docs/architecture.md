@@ -36,3 +36,9 @@ tests/는 계산과 GUI를 구분한다. docs/는 상태·규약·사양·로드
 - 사용자 지시에 따라 Python/test/RobotStudioAI로 이동하고 기존 공용 가상환경을 사용한다.
 - Generic 모델로 초기 검증한다. 기존 웹 스튜디오의 근사 DH를 제조사 사양으로 재사용하지 않는다.
 - PyBullet은 Phase 1 필수 의존성에서 제외한다. 현재는 동역학/충돌을 구현하지 않기 때문이다.
+- 사용자의 추가 지시에 따라 기존 로봇 앱 소스는 재사용하지 않고 완전히 신규 작성했다.
+- UI 관절 이벤트 → 모델 제한 검사 → TreeKinematics → FKResult 하나 → VTK actor 행렬과
+  TCP 표시를 갱신한다. render의 독립 근사 기구학을 만들지 않는다.
+- URDF/STL/OBJ 로딩은 QThreadPool에서 수행하고 성공한 모델만 UI에 반영한다.
+- Windows onedir는 자체 URDF/YAML과 Qt/VTK DLL을 포함한다. 외부 cwd/Python PATH 없이
+  smoke 검증한다. wheel도 소스 경로를 제거한 별도 임시 폴더에서 자원을 확인한다.

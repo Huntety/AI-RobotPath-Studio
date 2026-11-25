@@ -9,6 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
+from robotstudio_ai import __version__
 from robotstudio_ai.core.kinematics import TreeKinematics
 from robotstudio_ai.settings import load_settings
 
@@ -79,6 +80,7 @@ def main(argv: list[str] | None = None) -> int:
                 if not window.grab().save(str(args.screenshot.resolve())):
                     raise RuntimeError("Screenshot save failed")
             outcome.update(
+                version=__version__,
                 model=model.name,
                 actors=len(window.viewport.actors),
                 tcp_m=window.fk.tcp[:3, 3].tolist(),

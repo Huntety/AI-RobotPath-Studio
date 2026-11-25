@@ -43,9 +43,8 @@ class JointControl(QWidget):
         self.slider = QSlider(Qt.Orientation.Horizontal)
         self.slider.setRange(0, 10000)
         layout.addWidget(self.slider)
-        limit_text = (
-            f"{low * self.factor:.1f}  ↔  {high * self.factor:.1f}"
-            + ("  · continuous jog window" if joint.kind == "continuous" else "")
+        limit_text = f"{low * self.factor:.1f}  ↔  {high * self.factor:.1f}" + (
+            "  · continuous jog window" if joint.kind == "continuous" else ""
         )
         self.setToolTip(limit_text)
         self.slider.valueChanged.connect(self._slider_changed)

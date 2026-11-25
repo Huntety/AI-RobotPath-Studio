@@ -196,3 +196,13 @@ def test_relative_mesh_and_explicit_package_path(tmp_path):
         0.001,
         0.001,
     )
+
+
+def test_reject_utf16_entity_declaration(tmp_path):
+    path = tmp_path / "encoded.urdf"
+    path.write_text(
+        '<!DOCTYPE robot [<!ENTITY test "x">]><robot name="&test;"><link name="base"/></robot>',
+        encoding="utf-16",
+    )
+    with pytest.raises(ValueError, match="UTF-8"):
+        load_urdf(path)

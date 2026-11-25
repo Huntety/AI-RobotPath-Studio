@@ -3,6 +3,7 @@
 ## 실행
 Python/test/RobotStudioAI/start_robotstudio.cmd를 더블클릭한다.
 상위 Python/test 공용 가상환경을 사용하며 별도 활성화는 필요 없다.
+독립 실행본은 `dist/RobotStudioAI/RobotStudioAI.exe`이다. `_internal` 폴더를 함께 유지한다.
 
 ```powershell
 cd "C:\Users\STEC KB\Desktop\260826HDK\Python\test\RobotStudioAI"
@@ -32,6 +33,7 @@ TCP 설정 탭에서 Tool 링크와 링크 기준 위치·회전 오프셋을 �
 외부 모델은 출처 미검증으로 표시하고 제조사 검증을 자동 부여하지 않는다.
 fixed/revolute/continuous/prismatic을 지원한다. continuous 조그 표시는 ±180° 창이다.
 단일 루트 tree, 유효한 관절 제한/axis가 필요하다. mimic/floating/planar/xacro는 거부한다.
+URDF는 UTF-8(선택적 BOM) XML이어야 하며 DTD/entity를 지원하지 않는다.
 STL/OBJ는 URDF 상대경로와 mesh scale을 사용한다. GUI의 package:// 자동 추정은 지원하지 않는다.
 Python loader에서는 명시적인 package_dirs 매핑을 전달할 수 있다.
 mesh당 100MB, 200만 삼각형 제한이 있다. inertial/dynamics는 사용하지 않는다.

@@ -3,7 +3,8 @@
 2026-11-25, 초기 Python 3.12.10 환경에서 설치 후 사용자 요청으로
 Python/test 공용 Python 3.12.14 환경으로 전환했다.
 기존 NumPy 2.5.2, PySide6 6.11.2, Pillow 12.3.0, packaging 26.3은 유지했다.
-프로젝트 실행은 `../Scripts/python.exe`를 사용한다. 아래는 초기 설치 기록이다.
+프로젝트 실행은 `../Scripts/python.exe`를 사용한다. 처음 만든 자체 .venv는 제거했다.
+공용 환경 pip check 및 기존 QtWebEngine import가 통과했다. 아래는 초기 설치 기록이다.
 
 | 구성 | 설치 버전 | 확인 |
 |---|---|---|
@@ -24,6 +25,9 @@ Phase 3 전에 검토한다. Python 3.12를 변경하지 않았으며 Phase 1은
 의존성 범위는 pyproject.toml, 실제 설치된 전체 버전은 requirements-lock.txt로 기록한다.
 재현: `python -m pip install -r requirements-lock.txt` 다음 `python -m pip install --no-deps -e .`.
 lock은 이 Windows 개발 환경 기준이다. CI는 pyproject 범위의 조합도 확인한다.
+공용 환경 전환 후 lock은 기존 프로젝트 패키지 목록의 버전만 갱신했다.
+Torch/기존 프로젝트를 비롯한 공용 환경의 무관한 패키지는 lock에 넣지 않았다.
+GUI는 PySide6 6.11.2/PyVista 0.49.3/VTK 9.7.2/pyvistaqt 0.14.1 조합에서 검증했다.
 
 샌드박스 TEMP 경로의 `{...}`를 setuptools가 변수로 해석하는 오류가 있었다.
 이 환경에서 설치/빌드할 때 TEMP와 TMP를 프로젝트 `.cache/tmp` 절대경로로 지정하면 해결된다.
