@@ -11,3 +11,4 @@ $env:TMP = $robotTemp
 & $robotPython -m PyInstaller --noconfirm RobotStudioAI.spec
 if ($LASTEXITCODE -ne 0) { throw 'PyInstaller build failed' }
 Write-Host 'Run dist\RobotStudioAI\RobotStudioAI.exe. Keep its _internal directory beside it.'
+Write-Host 'Prepared local S922 models, when present, are copied to the models directory beside the EXE.'

@@ -1,6 +1,25 @@
 # 개발 상태
 
-기준일: 2026-11-25 (Asia/Seoul)
+기준일: 2026-11-26 (Asia/Seoul)
+
+## 현재 작업: 공식 S922 CAD 적용 (0.1.1)
+- 사용자 추가 요청에 따라 Phase 1 보완 작업으로 구현했다. Phase 2는 시작하지 않았다.
+- 공식 STEP V3.0 2024-04-29의 S922-1~7을 새로 분석/변환했다. 기존 앱 자료는 재사용하지 않았다.
+- 7개 강체/13재질/199,329 삼각형, 원래 CAD 조립 자세와 면 색상을 보존했다.
+- 6개 이웃 부품의 공통 원통 면에서 회전 직선을 추출하고 도면 425/395mm와 대조했다.
+- CAD 상대각 전용 manifest를 추가했다. 속도/effort/동역학/충돌 값을 임의로 채우지 않는다.
+- Generic↔S922 비동기 모델 전환, 미보정 표시, source/frozen 로컬 모델 검색을 구현했다.
+- 테스트: 60 passed (10.83s), Ruff/pip check 통과. 실제 S922 재조립/6관절/모델 전환 포함.
+- wheel 0.1.1을 별도 폴더에서 검사했다. CAD 없는 배포는 Generic으로 실행한다.
+- Windows 0.1.1도 Python/venv 경로 없는 외부 cwd에서 S922/13 actors/관절/FK/VTK 실행 통과.
+- EXE SHA256: C40A473A85B8CC49E1A0F7441847D84E39E8B6C04150A81340AB7E2AC5E4D124.
+- 로컬 CAD는 models/hitbot_s922, 원본은 .cache/s922-source. 두 경로 모두 Git에서 제외한다.
+- Windows 번들 및 최종 Git/CI 결과는 완료 보고와 원격 refs/Actions를 기준으로 한다.
+- 현재 브랜치: feature/s922-official-cad. 상세 출처/방법/한계는 docs/s922_cad.md 참조.
+- 남은 사양: 실제 제어기 영점/양의 방향/플랜지 X-Y 기준, 보정, 속도/가속도/관성/충돌.
+- 다음: 제어기 좌표 대조 자료 확보 또는 사용자 확인 후 Phase 2 Scene Manager.
+
+## 이전 Phase 0/1 기록 (2026-11-25)
 
 - 현재 Phase: 1 구현/로컬 검증 완료, Task 1.3 최종 릴리스 기록.
 - 기존 상태: 원격 main의 README 초기 Commit e694bb0을 보존하여 시작.
@@ -30,6 +49,6 @@
   10 visual actors, vtkGenericOpenGLRenderWindow. 로컬 번들 593,645,445 bytes.
 - 카메라 맞춤 회귀를 발견하여 camera_set 처리로 수정 후 GUI 테스트 재통과.
 - 다음: Phase 1 결과 보고 후 사용자 확인을 받아 Phase 2 Scene Manager부터 진행한다.
-- 문제: S922 검증 사양 없음. Generic 모델을 별도로 사용한다.
+- 당시 문제: S922 검증 사양 없음. Generic 모델을 별도로 사용했다.
 - 환경: PyBullet Windows cp312 wheel 없음; Phase 1 필수 의존성에서 제외. docs/environment.md 참조.
 - 사용자 지시: 기존 로봇 프로그램 코드를 재사용하지 않고 신규 구현. 공용 환경만 사용.

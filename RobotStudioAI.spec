@@ -1,5 +1,6 @@
 # PyInstaller onedir build. Run with the shared Python/test environment.
 from pathlib import Path
+from shutil import copytree
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules, copy_metadata
 
 root = Path(SPECPATH)
@@ -18,7 +19,7 @@ a = Analysis(
     binaries=[], datas=datas, hiddenimports=hidden,
     excludes=["torch", "torchvision", "cv2", "pytest", "IPython", "tkinter", "pandas", "sympy",
               "trame", "PySide6.QtWebEngineCore", "PySide6.QtWebEngineWidgets",
-              "PySide6.QtWebEngineQuick", "PySide6.QtQml", "PySide6.QtQuick"],
+              "PySide6.QtWebEngineQuick", "PySide6.QtQml", "PySide6.QtQuick", "OCP"],
     noarchive=False,
 )
 pyz = PYZ(a.pure)
@@ -26,3 +27,8 @@ exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="RobotStudioAI",
           debug=False, strip=False, upx=False, console=False,
           disable_windowed_traceback=False)
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name="RobotStudioAI")
+
+# Local-only vendor assets are optional and never tracked or published by CI.
+local_model = root / "models" / "hitbot_s922"
+if (local_model / "app.yaml").is_file():
+    copytree(local_model, Path(DISTPATH) / "RobotStudioAI" / "models" / "hitbot_s922")

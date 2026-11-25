@@ -11,14 +11,15 @@ from PySide6.QtWidgets import QMessageBox
 
 from robotstudio_ai.gui.main_window import MainWindow
 from robotstudio_ai.gui.viewport import geometry_surface
-from robotstudio_ai.settings import default_config_path
+from robotstudio_ai.settings import generic_config_path, load_settings
 
 pytestmark = pytest.mark.gui
 
 
 @pytest.fixture
 def window(qtbot):
-    widget = MainWindow()
+    settings, model = load_settings(generic_config_path())
+    widget = MainWindow(settings, model)
     qtbot.addWidget(widget)
     widget.show()
     qtbot.waitExposed(widget)
@@ -93,7 +94,7 @@ def test_async_urdf_replaces_only_valid_model(window, qtbot, tmp_path, monkeypat
     qtbot.waitUntil(lambda: not window.busy, timeout=15000)
     assert window.model is original
     assert messages
-    model_path = default_config_path().parent / "../robots/generic_6axis/robot.urdf"
+    model_path = generic_config_path().parent / "../robots/generic_6axis/robot.urdf"
     window.load_urdf_async(model_path)
     qtbot.waitUntil(lambda: not window.busy, timeout=15000)
     assert window.model is not original
@@ -155,3 +156,39 @@ def test_window_screenshot_and_all_joints_visible(window, qtbot):
         ),
         encoding="utf-8",
     )
+
+
+@pytest.mark.cad_assets
+def test_s922_all_six_joint_controls_and_profile_switch(window, qtbot):
+    from robotstudio_ai.settings import s922_config_path
+
+    if not s922_config_path().is_file():
+        pytest.skip("Run tools/prepare_s922.py locally")
+    assert window.model_selector.count() == 2
+    window.model_selector.setFocus()
+    qtbot.keyClick(window.model_selector, Qt.Key.Key_Down)
+    qtbot.waitUntil(lambda: not window.busy, timeout=20000)
+    assert window.model.name == "hitbot_s922_cad_reference"
+    assert window.model.provenance.joint_coordinates == "cad_relative"
+    assert "상대각" in window.model_notice.text()
+    assert len(window.viewport.actors) == 13
+    for index in range(6):
+        window.reset_home()
+        baseline = window.fk
+        window.controls[index].spin.setValue(15)
+        assert window.q[index] == pytest.approx(np.pi / 12)
+        assert not np.allclose(window.fk.tcp, baseline.tcp)
+        for unchanged in range(index + 1):
+            name = "base_link" if unchanged == 0 else f"link{unchanged}"
+            np.testing.assert_allclose(window.fk.links[name], baseline.links[name], atol=1e-12)
+        for (name, _), actor in window.viewport.actors.items():
+            np.testing.assert_allclose(actor.user_matrix, window.fk.links[name], atol=1e-12)
+    window.reset_home()
+    window.viewport.fit()
+    qtbot.wait(50)
+    assert window.grab().save("artifacts/s922-tested-ui.png")
+    qtbot.keyClick(window.model_selector, Qt.Key.Key_Up)
+    qtbot.waitUntil(lambda: not window.busy, timeout=20000)
+    assert window.model.provenance.synthetic
+    np.testing.assert_allclose(window.q, window.home)
+    assert window.tabs.tabText(0) == "관절 조작"

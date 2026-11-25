@@ -10,12 +10,12 @@ from robotstudio_ai.core.kinematics import TreeKinematics
 from robotstudio_ai.core.schema import JointState, Pose
 from robotstudio_ai.core.transforms import pose_matrix, transform
 from robotstudio_ai.core.urdf import load_urdf
-from robotstudio_ai.settings import load_settings
+from robotstudio_ai.settings import generic_config_path, load_settings
 
 
 @pytest.fixture
 def generic():
-    return load_settings()[1]
+    return load_settings(generic_config_path())[1]
 
 
 @pytest.mark.parametrize(

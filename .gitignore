@@ -15,5 +15,7 @@ artifacts/
 *.pem
 *.key
 projects/
+# Downloaded manufacturer CAD and derived meshes are local-only.
+models/
 .idea/
 .vscode/

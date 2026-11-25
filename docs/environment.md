@@ -1,5 +1,10 @@
 # 개발 환경과 호환성 확인
 
+2026-11-26 S922 CAD 변환용 optional extra에 cadquery-ocp-novtk 7.9.3.1 및
+cadquery-ocp-proxy 7.9.3.1을 추가 설치했다. 기존 VTK 9.7.2/PySide6/NumPy를 변경하지 않았다.
+STEP 변환은 이 extra만 사용하며 GUI/EXE에는 OpenCascade를 포함하지 않는다.
+공용 환경 pip check 통과. 일반 설치/CI에는 CAD extra가 필요하지 않다.
+
 2026-11-25, 초기 Python 3.12.10 환경에서 설치 후 사용자 요청으로
 Python/test 공용 Python 3.12.14 환경으로 전환했다.
 기존 NumPy 2.5.2, PySide6 6.11.2, Pillow 12.3.0, packaging 26.3은 유지했다.

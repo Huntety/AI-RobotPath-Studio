@@ -3,6 +3,7 @@
 import json
 import os
 import subprocess
+import tomllib
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
@@ -12,6 +13,7 @@ foreign.mkdir(parents=True, exist_ok=True)
 report = root / "artifacts" / "bundle-smoke.json"
 screenshot = root / "artifacts" / "bundle-ui.png"
 environment = dict(os.environ)
+metadata = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
 for key in (
     "PYTHONPATH",
     "PYTHONHOME",
@@ -35,7 +37,14 @@ subprocess.run(
 )
 outcome = json.loads(report.read_text(encoding="utf-8"))
 assert outcome["success"] is True, outcome
-assert outcome.get("version") == "0.1.0", outcome
-assert outcome["actors"] == 10, outcome
+assert outcome.get("version") == metadata["project"]["version"], outcome
+local_manifest = root / "models" / "hitbot_s922" / "model.json"
+if local_manifest.is_file():
+    manifest = json.loads(local_manifest.read_text(encoding="utf-8"))
+    assert outcome["model"] == "hitbot_s922_cad_reference", outcome
+    assert outcome["joint_coordinates"] == "cad_relative", outcome
+    assert outcome["actors"] == sum(len(part["meshes"]) for part in manifest["parts"]), outcome
+else:
+    assert outcome["actors"] == 10, outcome
 assert screenshot.stat().st_size > 10000
 print(json.dumps(outcome, indent=2))
