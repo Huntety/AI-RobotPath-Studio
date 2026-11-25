@@ -17,3 +17,5 @@
 - Windows GUI CI는 workflow_dispatch 전용이다. 자동 CI는 핵심 모듈을 검사한다.
 - 제조사 CAD/메시는 로컬 전용이다. 저장소 clone/wheel에는 포함하지 않으며 변환 도구로 준비한다.
 - S922 collision geometry, 속도/가속도/effort, 질량/관성은 지정하지 않았다.
+- S922 표시용 삼각화 설정은 0.35mm/0.22rad이다. STL 정점 재조립 오차 검사(1µm)는
+  해석 CAD 곡면에 대한 정밀도/충돌 정확도 보장이 아니다.
