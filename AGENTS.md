@@ -7,6 +7,8 @@ Windows/Python 3.12, PySide6, PyVista/VTK를 기본으로 한다. ROS는 필수�
 사용자 지정 작업 경로는 Python/test/RobotStudioAI이며 상위 공용 가상환경
 `../Scripts/python.exe` (Python 3.12.14)를 사용한다. 추가 가상환경을 만들지 않는다.
 공용 환경의 기존 패키지는 불필요하게 변경하지 않는다.
+사용자 요청: 기존 robot_path_desktop, robot_path_studio 및 HITBOT 웹 스튜디오의 코드를
+재사용하지 않고 완전히 새로 구현한다. 기존 프로젝트는 수정하지 않는다.
 현재 요청은 Phase 0 및 Phase 1까지다. Phase 2 진행 전에 사용자 확인을 받는다.
 실제 로봇 접속·구동 기능을 구현하지 않는다.
 

@@ -2,6 +2,8 @@
 
 ## Unreleased — Phase 1
 - 사용자 지정 Python/test 작업 폴더와 기존 Python 3.12.14 공용 가상환경으로 전환.
+- Task 1.1: 자체 Generic URDF, 엄격한 트리/제한/geometry 검증, FK/모델 인터페이스.
+- 35 tests 통과, 독립 expm/해석 기준과 FK 비교. 기존 프로젝트 코드는 재사용하지 않음.
 
 ## 0.0.1 — Phase 0 (2026-11-25)
 - 별도 Python 패키지, 개발 규칙, 좌표계/아키텍처/로드맵.
