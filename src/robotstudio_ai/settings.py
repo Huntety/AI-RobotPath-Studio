@@ -5,7 +5,7 @@ from importlib.resources import files
 from pathlib import Path
 
 import yaml
-from pydantic import Field, model_validator
+from pydantic import Field, PrivateAttr, model_validator
 
 from robotstudio_ai.core.cad_model import load_cad_reference
 from robotstudio_ai.core.schema import Finite, ModelProvenance, Pose, Record
@@ -31,6 +31,11 @@ class RobotSettings(Record):
 class AppSettings(Record):
     robot: RobotSettings
     frame_size_m: Finite = Field(default=0.12, gt=0)
+    _config_path: Path | None = PrivateAttr(default=None)
+
+    @property
+    def config_path(self) -> Path | None:
+        return self._config_path
 
 
 def generic_config_path() -> Path:
@@ -60,6 +65,7 @@ def load_settings(path: Path | None = None) -> tuple[AppSettings, URDFRobot]:
     """Resolve URDF relative to the config file and validate its home/tool frame."""
     path = (path or default_config_path()).resolve()
     settings = AppSettings.model_validate(yaml.safe_load(path.read_text(encoding="utf-8")))
+    settings._config_path = path
     config = settings.robot
     if config.cad_manifest:
         model = load_cad_reference(path.parent / config.cad_manifest, config.provenance)

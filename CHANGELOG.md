@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased — Phase 2
+- Task 2.2: 내용 hash의 SI mesh 자산, .rsai portable 프로젝트, atomic 저장 및 엄격한 로드 검증.
+- STL/OBJ의 mm/m 단위와 원점을 보존하고 원본/제조사 CAD를 임의로 수정하거나 복사하지 않음.
+- 핵심 80 tests 통과. 원본 제거 후 복구/잘못된 archive·checksum·camera 검증 포함.
 - Task 2.1: 장면/객체/형상/자산/로봇 상태 계약과 원자적 Scene Manager.
 - 부모 좌표계, 복제/하위 삭제, bounded Undo/Redo, 단조 revision/token 무효화.
 - Scene 및 기존 핵심 계산 테스트 67개 통과. GUI/프로젝트 파일은 후속 Task.

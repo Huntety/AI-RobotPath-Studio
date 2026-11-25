@@ -3,6 +3,10 @@
 기준일: 2026-11-26 (Asia/Seoul)
 
 ## Phase 2: Task 2.1 장면 데이터/변경 이력
+- Task 2.1 Commit 48512f2 Push/원격 SHA 확인 완료.
+- Task 2.2 완료: mm/m STL/OBJ, 내용 hash 자산, .rsai ZIP/JSON 프로젝트 원자적 저장/로드.
+- 핵심 검증 80 passed (6.20s), 원본 삭제 후 자산 복구/변조/경로/형식 거부 포함.
+- 다음: GUI 객체 편집/부모/마우스 변환, 통합/Windows 배포. docs/phase_02.md 참조.
 - 사용자 Phase 2 진행 승인. 브랜치 feature/phase-02-scene-editor.
 - 완료: 검증된 장면 객체/형상/로봇 상태/mesh 자산 계약, 부모 좌표계 그래프.
 - 완료: 추가/수정/복제/하위 객체 삭제, 100개 이력 Undo/Redo, gesture 병합.

@@ -58,3 +58,7 @@ tests/는 계산과 GUI를 구분한다. docs/는 상태·규약·사양·로드
   이력은 bounded snapshot이며 mesh 파일 내용은 포함하지 않아 RAM 복제를 방지한다.
 - SceneToken(scene_id, revision)은 입력 상태 식별자이며 안전 검증 증명서가 아니다.
   Undo/Redo도 revision이 증가하므로 이전 경로/검증을 재사용할 수 없다.
+- core/project_io.py는 .rsai(scene.json+hash/STL) 프로젝트를 원자적으로 저장하고 제한/경로/hash를
+  검증한다. 사용자 객체 mesh는 내장하고 로봇 모델은 portable ID 또는 명시적인 외부 파일 참조다.
+- scene_profiles.py가 모델 참조를 로컬에서 해석한다. 네트워크/코드 실행은 수행하지 않는다.
+- AppSettings는 읽은 설정 경로를 비직렬화 private metadata로 유지해 프로젝트 출처를 결정한다.
