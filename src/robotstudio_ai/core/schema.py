@@ -1,7 +1,7 @@
 """Immutable boundary data shared by model, rendering and future planning modules."""
 
 import math
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -57,3 +57,4 @@ class ModelProvenance(Record):
     synthetic: bool
     source: str
     hardware_validated: bool = False
+    joint_coordinates: Literal["model", "cad_relative"] = "model"

@@ -41,6 +41,7 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "model": model.name,
                     "synthetic": model.provenance.synthetic,
+                    "joint_coordinates": model.provenance.joint_coordinates,
                     "joints": len(model.active_joints),
                     "tcp_m": fk.tcp[:3, 3].tolist(),
                 },
@@ -82,6 +83,7 @@ def main(argv: list[str] | None = None) -> int:
             outcome.update(
                 version=__version__,
                 model=model.name,
+                joint_coordinates=model.provenance.joint_coordinates,
                 actors=len(window.viewport.actors),
                 tcp_m=window.fk.tcp[:3, 3].tolist(),
                 render_window=window.viewport.plotter.render_window.GetClassName(),

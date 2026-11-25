@@ -11,3 +11,9 @@
 - base_link, flange, tool0를 구분한다. Generic world/base는 초기 단위 변환이다.
 - Mesh 좌표는 링크 visual origin 및 mesh scale을 먼저 적용하고 FK 링크 변환을 적용한다.
 - 제조사 좌표 규약·영점·회전 순서는 미확인이다. Generic의 규약을 S922에 적용하지 않는다.
+- S922 CAD profile은 별도 CAD 상대각 규약이다. CAD mm/Y-up → 앱 m/Z-up:
+  `(x,y,z) → (x,-z,y)/1000`. 원래 STEP 조립 자세가 상대각 0이며 제조사 영점이 아니다.
+- CAD에서 추출한 축 방향의 부호는 좌표상 가장 큰 성분이 양수가 되도록 정한 기하학 규약이다.
+  실제 제어기의 양의 방향과 일치한다고 판단하지 않는다.
+- CAD 플랜지 TCP는 장착 평면/끝단 회전축 교점과 바깥쪽 법선으로 구성한다.
+  X/Y twist는 CAD 규약이고 제어기 flange/tool 기준과 미대조 상태다.

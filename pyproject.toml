@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "robotstudio-ai"
-version = "0.1.0"
-description = "Offline industrial robot planning platform — Generic model validation"
+version = "0.1.1"
+description = "Offline robot workbench with Generic and official S922 CAD reference models"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -17,6 +17,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "pytest-qt>=4.4,<5", "ruff>=0.9,<1", "build>=1,<2"]
 bundle = ["pyinstaller>=6.11,<7"]
+cad = ["cadquery-ocp-novtk==7.9.3.1"]
 
 [project.scripts]
 robotstudio-ai = "robotstudio_ai.app:main"
@@ -31,7 +32,8 @@ robotstudio_ai = ["data/**/*.yaml", "data/**/*.urdf", "data/**/*.md"]
 testpaths = ["tests"]
 pythonpath = ["src"]
 qt_api = "pyside6"
-markers = ["gui: Qt/VTK integration (requires an OpenGL capable desktop)"]
+markers = ["gui: Qt/VTK integration (requires an OpenGL capable desktop)",
+           "cad_assets: local manufacturer CAD assets (not redistributed)"]
 
 [tool.ruff]
 line-length = 100

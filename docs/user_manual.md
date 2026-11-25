@@ -12,7 +12,10 @@ cd "C:\Users\STEC KB\Desktop\260826HDK\Python\test\RobotStudioAI"
 ```
 
 ## 로봇 모델 확인
-초기 모델은 자체 제작 Generic 6-Axis SYNTHETIC이다. HITBOT S922 사양이 아니다.
+로컬 공식 CAD를 준비한 PC에서는 HITBOT S922가 기본이다. 상단에서 Generic과 전환한다.
+S922의 J1_CAD~J6_CAD는 CAD 조립 자세 기준 상대각이며 실제 제어기 영점과 미대조 상태다.
+±180°는 미리보기 창이다. 제어기 소프트웨어 한계로 사용하지 않는다.
+CAD가 없는 PC는 자체 제작 Generic 6-Axis SYNTHETIC으로 실행된다.
 관절 패널의 슬라이더 또는 숫자로 자세를 변경한다. 회전은 degree, 직동은 mm로 표시한다.
 제한은 입력 위젯과 핵심 모델 양쪽에서 검사한다. 마우스를 관절 위에 두면 범위를 볼 수 있다.
 Home은 설정 자세, 제로 자세는 0을 각 관절 제한 내로 제한한 자세다.
@@ -47,3 +50,4 @@ mesh당 100MB, 200만 삼각형 제한이 있다. inertial/dynamics는 사용하
 
 이 버전은 수동 모델 자세/FK를 확인하는 Phase 1이다. 충돌·경로·동역학·자동 작업·LLM·
 제조사 코드 출력 및 실제 장비 연결/구동은 아직 구현하지 않았다.
+S922 CAD 변환/출처/재배포 구분은 s922_cad.md를 참조한다.

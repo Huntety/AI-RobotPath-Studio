@@ -42,3 +42,11 @@ tests/는 계산과 GUI를 구분한다. docs/는 상태·규약·사양·로드
 - URDF/STL/OBJ 로딩은 QThreadPool에서 수행하고 성공한 모델만 UI에 반영한다.
 - Windows onedir는 자체 URDF/YAML과 Qt/VTK DLL을 포함한다. 외부 cwd/Python PATH 없이
   smoke 검증한다. wheel도 소스 경로를 제거한 별도 임시 폴더에서 자원을 확인한다.
+- 2026-11-26: 공식 S922 STEP의 7개 부품에서 CAD 참조 모델을 생성한다.
+  제어기 영점·동역학 값을 임의로 채우는 URDF 대신 명시적인 CAD manifest를 추가했다.
+  기존 RobotModel/KinematicsSolver/FKResult 계약과 tree 자료구조를 그대로 소비한다.
+- CAD profile은 외부 models/에 보관한다. source 기본 경로는 프로젝트 models/,
+  frozen 기본 경로는 exe 옆 models/다. 없으면 Generic을 사용한다.
+- ModelProvenance.joint_coordinates=cad_relative는 미보정 CAD 모델을 구분한다.
+  CAD loader는 synthetic/hardware_validated 오표시를 거부한다.
+- 모델 전환은 비동기 로드 완료 후 base/tool/home/형상/좌표 표시를 함께 교체한다.

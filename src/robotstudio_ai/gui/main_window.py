@@ -38,13 +38,18 @@ from robotstudio_ai.core.schema import Pose
 from robotstudio_ai.core.urdf import load_urdf
 from robotstudio_ai.gui.joint_panel import JointControl
 from robotstudio_ai.gui.viewport import RobotViewport, Surfaces, prepare_surfaces
-from robotstudio_ai.settings import AppSettings, load_settings
+from robotstudio_ai.settings import (
+    AppSettings,
+    generic_config_path,
+    load_settings,
+    s922_config_path,
+)
 
 LOGGER = logging.getLogger(__name__)
 
 
 class LoaderSignals(QObject):
-    ready = Signal(object, object)
+    ready = Signal(object, object, object)
     failed = Signal(str)
     finished = Signal()
 
@@ -52,16 +57,21 @@ class LoaderSignals(QObject):
 class ModelLoader(QRunnable):
     """Load and validate URDF/mesh without blocking Qt input or rendering."""
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, profile: bool = False):
         super().__init__()
         self.path = path
+        self.profile = profile
         self.signals = LoaderSignals()
 
     def run(self):
         try:
-            model = load_urdf(self.path)
+            settings = None
+            if self.profile:
+                settings, model = load_settings(self.path)
+            else:
+                model = load_urdf(self.path)
             surfaces = prepare_surfaces(model)
-            self.signals.ready.emit(model, surfaces)
+            self.signals.ready.emit(model, surfaces, settings)
         except Exception as error:
             LOGGER.exception("URDF load failed")
             self.signals.failed.emit(str(error))
@@ -120,6 +130,13 @@ class MainWindow(QMainWindow):
         header.addWidget(self.model_badge)
         layout.addLayout(header)
         toolbar = QHBoxLayout()
+        self.model_selector = QComboBox()
+        self.model_selector.setMinimumWidth(170)
+        self.model_selector.addItem("Generic 6축 · 검증 모델", str(generic_config_path()))
+        if s922_config_path().is_file():
+            self.model_selector.addItem("HITBOT S922 · 공식 CAD", str(s922_config_path()))
+        self.model_selector.activated.connect(self._select_profile)
+        toolbar.addWidget(self.model_selector)
         self.open_button = QPushButton("URDF 열기")
         self.open_button.clicked.connect(self.open_urdf)
         toolbar.addWidget(self.open_button)
@@ -185,7 +202,7 @@ class MainWindow(QMainWindow):
         form.addRow(note)
         self.tabs.addTab(self.frame_panel, "TCP 설정")
         panel_layout.addWidget(self.tabs, 1)
-        tcp = QGroupBox("TCP · World 기준")
+        tcp = self.tcp_group = QGroupBox("TCP · World 기준")
         tcp_layout = QVBoxLayout(tcp)
         self.tcp_position = QLabel()
         self.tcp_position.setObjectName("readout")
@@ -198,7 +215,7 @@ class MainWindow(QMainWindow):
         tcp_layout.addWidget(self.tcp_orientation)
         tcp_layout.addWidget(self.tcp_quaternion)
         panel_layout.addWidget(tcp)
-        warning = QLabel("모델 자세 확인용 · 충돌/경로 미검증\n실제 로봇 연결 및 구동 기능 없음")
+        warning = self.model_notice = QLabel()
         warning.setObjectName("notice")
         warning.setWordWrap(True)
         panel_layout.addWidget(warning)
@@ -259,11 +276,31 @@ class MainWindow(QMainWindow):
         self.tool_link = tool_link
         self.model_badge.setText(model.provenance.display_name)
         self.model_badge.setToolTip(model.provenance.source)
+        is_cad = model.provenance.joint_coordinates == "cad_relative"
+        self.model_notice.setText(
+            "공식 CAD 외형 · 관절값은 CAD 기준 상대각\n"
+            "제어기 영점·방향·기구학 미보정\n충돌/경로 미검증 · 장비 연결 없음"
+            if is_cad
+            else "모델 자세 확인용 · 충돌/경로 미검증\n실제 로봇 연결 및 구동 기능 없음"
+        )
+        self.tcp_group.setTitle("TCP · CAD 기준 (World)" if is_cad else "TCP · World 기준")
+        self.tabs.setTabText(0, "관절 · CAD 상대각" if is_cad else "관절 조작")
+        for i in range(self.model_selector.count()):
+            path = Path(self.model_selector.itemData(i))
+            if (is_cad and path == s922_config_path()) or (
+                model.provenance.synthetic and path == generic_config_path()
+            ):
+                self.model_selector.setCurrentIndex(i)
         joint_widget = QWidget()
         joint_layout = QVBoxLayout(joint_widget)
         self.controls: list[JointControl] = []
         for index, joint in enumerate(model.active_joints):
             control = JointControl(joint)
+            if is_cad:
+                control.setToolTip(
+                    "CAD 조립 자세 기준 상대각 · ±180° 미리보기 범위\n"
+                    "제어기 영점/방향/소프트웨어 한계와 대응 미검증"
+                )
             control.changed.connect(lambda value, i=index: self.set_joint(i, value))
             joint_layout.addWidget(control)
             self.controls.append(control)
@@ -379,20 +416,37 @@ class MainWindow(QMainWindow):
             self.load_urdf_async(Path(filename))
 
     def load_urdf_async(self, path: Path):
+        self._start_loader(path, profile=False)
+
+    def load_profile_async(self, path: Path):
+        """Switch models only after the full profile and meshes have loaded."""
+        self._start_loader(path, profile=True)
+
+    def _select_profile(self, index: int):
+        self.load_profile_async(Path(self.model_selector.itemData(index)))
+
+    def _start_loader(self, path: Path, profile: bool):
         if self.busy:
             return
         self.busy = True
         self.open_button.setEnabled(False)
+        self.model_selector.setEnabled(False)
         self.statusBar().showMessage("URDF와 mesh를 불러오는 중…")
-        loader = ModelLoader(path)
+        loader = ModelLoader(path, profile)
         loader.signals.ready.connect(self._loaded)
         loader.signals.failed.connect(self._load_failed)
         loader.signals.finished.connect(lambda: self._load_finished(loader))
         self.jobs.append(loader)
         self.pool.start(loader)
 
-    def _loaded(self, model: RobotModel, surfaces: Surfaces):
+    def _loaded(self, model: RobotModel, surfaces: Surfaces, settings: AppSettings | None = None):
         if self.closed:
+            return
+        if settings is not None:
+            self.settings = settings
+            self.base = settings.robot.base
+            self.tool_offset = settings.robot.tool_offset
+            self.apply_model(model, surfaces, settings.robot.home_rad, settings.robot.tool_link)
             return
         home = tuple(
             min(
@@ -418,6 +472,7 @@ class MainWindow(QMainWindow):
         self.jobs.remove(loader)
         self.busy = False
         self.open_button.setEnabled(True)
+        self.model_selector.setEnabled(True)
 
     def append_log(self, text: str):
         LOGGER.info(text)
