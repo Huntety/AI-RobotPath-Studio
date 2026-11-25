@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — Phase 2
+- Task 2.1: 장면/객체/형상/자산/로봇 상태 계약과 원자적 Scene Manager.
+- 부모 좌표계, 복제/하위 삭제, bounded Undo/Redo, 단조 revision/token 무효화.
+- Scene 및 기존 핵심 계산 테스트 67개 통과. GUI/프로젝트 파일은 후속 Task.
+
 ## 0.1.1 — S922 공식 CAD (2026-11-26)
 - 공식 STEP V3.0 2024-04-29의 7개 부품/13재질/199,329 삼각형을 로컬 모델로 적용.
 - 이웃 원통 면으로 6개 회전 직선 추출, 도면 425/395mm 및 메시 재조립 대조.

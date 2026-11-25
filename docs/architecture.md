@@ -50,3 +50,11 @@ tests/는 계산과 GUI를 구분한다. docs/는 상태·규약·사양·로드
 - ModelProvenance.joint_coordinates=cad_relative는 미보정 CAD 모델을 구분한다.
   CAD loader는 synthetic/hardware_validated 오표시를 거부한다.
 - 모델 전환은 비동기 로드 완료 후 base/tool/home/형상/좌표 표시를 함께 교체한다.
+- Phase 2: core/scene.py의 SceneDocument가 단일 로봇 인스턴스, UUID 객체,
+  식별자 기반 mesh 자산을 관리한다. 형상은 box/cylinder/sphere/mesh/frame 구분형 데이터다.
+- 객체 부모는 world/robot_base/robot_tool 또는 다른 객체 UUID다. 누락/순환 부모를 거부한다.
+  Tool 자식은 같은 FKResult의 TCP 변환을 전달받아 해석한다.
+- SceneManager는 전체 후보를 검증한 뒤 원자적으로 교체한다. 외부로는 deep copy만 제공한다.
+  이력은 bounded snapshot이며 mesh 파일 내용은 포함하지 않아 RAM 복제를 방지한다.
+- SceneToken(scene_id, revision)은 입력 상태 식별자이며 안전 검증 증명서가 아니다.
+  Undo/Redo도 revision이 증가하므로 이전 경로/검증을 재사용할 수 없다.

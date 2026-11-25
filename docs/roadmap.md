@@ -4,7 +4,7 @@
 |---|---|---|
 | 0 | 환경, 아키텍처, 규약, 데이터 계약, 테스트, Git/CI | 완료, v0.0.1 원격 확인 |
 | 1 | Generic URDF, FK, GUI/VTK, 관절/TCP, 통합 검증 | 1.1/1.2/1.3 구현·검증 완료, v0.1.0 |
-| 2 | 장면 객체/mesh, 편집, 저장, undo/redo, revision | 사용자 확인 후 |
+| 2 | 장면 객체/mesh, 편집, 저장, undo/redo, revision | 사용자 승인, Task 2.1 진행 |
 | 3 | IK/Jacobian, 자기/환경/부착물 충돌 및 edge 검사 | 예정 |
 | 4 | RRT-Connect, 최적화, 가감속 궤적, 재검증 | 예정 |
 | 5 | box/cylinder 파지 후보, 접근·배치, 전체 후보 평가 | 예정 |
@@ -16,3 +16,6 @@
 
 Phase 1 Task: 1.1 URDF 모델/FK/독립 수치 검증, 1.2 GUI/관절 조작/TCP,
 1.3 통합·배포 실행 검증 및 문서. Task별 Commit/Push와 SHA 확인, 완료 시 v0.1.0.
+
+Phase 2 Task: 2.1 장면 계약/좌표계/변경 이력, 2.2 자산과 프로젝트 파일,
+2.3 3D 선택/편집/변환 위젯 및 GUI, 2.4 통합·회귀·Windows 배포 검증.

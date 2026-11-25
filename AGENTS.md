@@ -9,7 +9,8 @@ Windows/Python 3.12, PySide6, PyVista/VTK를 기본으로 한다. ROS는 필수�
 공용 환경의 기존 패키지는 불필요하게 변경하지 않는다.
 사용자 요청: 기존 robot_path_desktop, robot_path_studio 및 HITBOT 웹 스튜디오의 코드를
 재사용하지 않고 완전히 새로 구현한다. 기존 프로젝트는 수정하지 않는다.
-현재 요청은 Phase 0 및 Phase 1까지다. Phase 2 진행 전에 사용자 확인을 받는다.
+2026-11-26 사용자가 Phase 2 시작을 승인했다. Scene Manager, 객체 편집, 저장/불러오기,
+Undo/Redo와 통합 검증까지 진행한다. Phase 3은 별도 사용자 확인 후 진행한다.
 2026-11-26 추가 요청: 공식 S922 CAD를 찾아 적용한다. CAD 원본/변환 메시를 로컬 models/에
 보관하고 재배포 권한이 확인되기 전 GitHub에 업로드하지 않는다. 기존 앱 코드는 재사용하지 않는다.
 CAD 기준 상대각과 실제 제어기 영점/한계를 구분하고 미보정 상태를 GUI와 문서에 표시한다.

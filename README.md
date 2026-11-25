@@ -31,6 +31,8 @@ PyBullet은 충돌/시뮬레이션 Phase에서 연결한다.
 - 비동기 URDF/STL/OBJ 로딩 및 실패 복구. 모든 형상과 TCP에 같은 FK 결과 적용.
 - S922 V3.0(2024-04-29) 공식 CAD 7개 부품, 6개 관절 조작, Generic↔S922 전환.
 - IK·충돌·경로·작업 계획·LLM·제조사 코드 출력은 후속 Phase에 구현한다.
+- Phase 2 진행 중: Scene Manager/객체 데이터/부모 좌표계/Undo·Redo/revision 구현.
+  작업환경 GUI 및 저장 기능은 순차적으로 연결하고 있다.
 
 ## 독립 Windows 실행 파일
 로컬 빌드 결과: `dist/RobotStudioAI/RobotStudioAI.exe`.

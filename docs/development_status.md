@@ -2,6 +2,16 @@
 
 기준일: 2026-11-26 (Asia/Seoul)
 
+## Phase 2: Task 2.1 장면 데이터/변경 이력
+- 사용자 Phase 2 진행 승인. 브랜치 feature/phase-02-scene-editor.
+- 완료: 검증된 장면 객체/형상/로봇 상태/mesh 자산 계약, 부모 좌표계 그래프.
+- 완료: 추가/수정/복제/하위 객체 삭제, 100개 이력 Undo/Redo, gesture 병합.
+- revision은 모든 변경과 Undo/Redo에서도 증가한다. 이전 token은 다시 유효해지지 않는다.
+- World/Base/Tool/객체 부모 합성 및 월드 자세 보존 reparent를 구현했다.
+- 실제 검증: Scene/좌표/기존 기구학/CAD 테스트 67 passed (3.30s), Ruff 통과.
+- 다음: Task 2.2 portable 프로젝트/mesh 자산, Task 2.3 GUI, Task 2.4 통합/배포.
+- GUI에 장면 편집은 아직 연결 전이다. Phase 3 충돌/경로 검증은 구현하지 않았다.
+
 ## 현재 작업: 공식 S922 CAD 적용 (0.1.1)
 - 사용자 추가 요청에 따라 Phase 1 보완 작업으로 구현했다. Phase 2는 시작하지 않았다.
 - 공식 STEP V3.0 2024-04-29의 S922-1~7을 새로 분석/변환했다. 기존 앱 자료는 재사용하지 않았다.
