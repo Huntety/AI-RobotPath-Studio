@@ -6,18 +6,19 @@ Windows용 산업용 로봇 오프라인 프로그래밍 플랫폼. 자연어 �
 HITBOT S922의 정확한 사양은 미확인이다. 실제 로봇 연결/구동 기능은 제공하지 않는다.
 
 ## 환경과 설치
-Windows, Python 3.12 (현재 확인 3.12.10), Git. ROS 설치는 필요 없다.
+Windows, Python 3.12, Git. ROS 설치는 필요 없다.
+사용자 지정 작업 위치는 `Python/test/RobotStudioAI`이며 기존 상위 공용 환경을 사용한다.
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m pytest -m "not gui"
-.\.venv\Scripts\python.exe -m ruff check .
+..\Scripts\python.exe -m pip install -r requirements.txt
+..\Scripts\python.exe -m pytest -m "not gui"
+..\Scripts\python.exe -m ruff check .
 ```
 
 PySide6 + PyVista/VTK + pyvistaqt, NumPy/SciPy, Pydantic, PyYAML, Trimesh를 사용한다.
 GUI 실행 진입점은 Phase 1에서 추가한다. PyBullet은 충돌/시뮬레이션 Phase에서 연결한다.
 현재 핵심 데이터 모듈은 GUI import 없이 테스트할 수 있다.
+새 PC는 Python 3.12 가상환경에 같은 requirements를 설치하면 된다.
 
 ## 문서
 - [개발 상태](docs/development_status.md)

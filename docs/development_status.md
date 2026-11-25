@@ -4,11 +4,13 @@
 
 - 현재 Phase: 0 로컬 검증 완료, Task: Commit/Push 및 원격 확인.
 - 기존 상태: 원격 main의 README 초기 Commit e694bb0을 보존하여 시작.
-- 로컬 경로: C:/Users/STEC KB/Desktop/260826HDK/RobotStudioAI.
-- Python: 3.12.10, Windows, 독립 .venv 구성.
+- 로컬 경로: C:/Users/STEC KB/Desktop/260826HDK/Python/test/RobotStudioAI.
+- Python: 사용자 지정 상위 공용 환경 ../Scripts/python.exe (3.12.14).
+- 사용자 지시에 따라 프로젝트를 Python/test로 이동했다. 기존 test 파일은 변경하지 않는다.
 - 완료: 폴더 구조, SI/좌표 규약, immutable Pydantic 계약, transform, 문서/개발 규칙.
 - 완료: 의존성 설치, editable 설치, 테스트/CI 구성, 요구 버전 lock.
-- 진행: Git Commit/Push와 tag 원격 확인. GitHub Actions 결과는 아직 확인 전.
+- Phase 0 Git: 7a9f68d, feature/phase-00-foundation 및 v0.0.1 Push/원격 SHA 확인 완료.
+- 진행: Phase 1. GitHub Actions 결과는 아직 확인 전.
 - 미완료: Phase 1 URDF/FK/GUI, 패키징 및 통합 검증.
 - 실제 테스트 결과: pytest 7 passed (1.26s), Ruff 통과, pip check 통과.
 - 다음: Phase 0 테스트·원격 확인 후 1.1 로봇 모델과 FK.
