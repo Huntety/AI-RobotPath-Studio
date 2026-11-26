@@ -5,6 +5,8 @@ import json
 import logging
 import os
 import sys
+import tempfile
+import time
 from pathlib import Path
 
 import numpy as np
@@ -53,12 +55,12 @@ def main(argv: list[str] | None = None) -> int:
     from PySide6.QtCore import QTimer
     from PySide6.QtWidgets import QApplication
 
-    from robotstudio_ai.gui.main_window import MainWindow
+    from robotstudio_ai.gui.workbench import SceneWorkbench
 
     app = QApplication.instance() or QApplication(sys.argv[:1])
     app.setApplicationName("RobotStudio AI")
     try:
-        window = MainWindow(settings, model)
+        window = SceneWorkbench(settings, model)
     except Exception:
         logging.exception("GUI initialisation failed")
         return 3
@@ -66,6 +68,19 @@ def main(argv: list[str] | None = None) -> int:
     outcome = {"success": True}
 
     def smoke():
+        smoke_errors = []
+        window._show_error = lambda message: smoke_errors.append(message)
+
+        def wait_for_io():
+            deadline = time.monotonic() + 20
+            while window.busy:
+                app.processEvents()
+                if time.monotonic() > deadline:
+                    raise TimeoutError("Scene file operation did not finish")
+                time.sleep(0.005)
+            if smoke_errors:
+                raise RuntimeError(smoke_errors[-1])
+
         try:
             old_tcp = window.fk.tcp.copy()
             control = window.controls[0]
@@ -74,7 +89,32 @@ def main(argv: list[str] | None = None) -> int:
             for (link, _), actor in window.viewport.actors.items():
                 np.testing.assert_allclose(actor.user_matrix, window.fk.links[link], atol=1e-12)
             window.reset_home()
-            window.viewport.fit()
+            object_id = window.create_primitive("box")
+            token = window.scene.token()
+            window.editor.pose.fields[0].setValue(550)
+            window.editor.apply_button.click()
+            assert window.scene.get_object(object_id).pose.position_m[0] == 0.55
+            assert not window.scene.is_current(token)
+            window.undo_action.trigger()
+            assert window.scene.get_object(object_id).pose.position_m[0] == 0.5
+            window.redo_action.trigger()
+            assert window.scene.get_object(object_id).pose.position_m[0] == 0.55
+            window.delete_selected()
+            window.load_demo()
+            window.scene_view.fit_all()
+            snapshot = window.scene.document
+            with tempfile.TemporaryDirectory(prefix="robotstudio-smoke-") as temporary:
+                project = Path(temporary) / "scene.rsai"
+                window.save_project_path(project)
+                wait_for_io()
+                assert project.is_file() and not window.scene.dirty
+                target = snapshot.objects[1]
+                window.scene.remove(target.id)
+                window.load_project_path(project)
+                wait_for_io()
+                assert window.scene.document.objects == snapshot.objects
+                assert window.scene.document.robot == snapshot.robot
+                assert not window.scene.dirty
             app.processEvents()
             if args.screenshot:
                 args.screenshot.parent.mkdir(parents=True, exist_ok=True)
@@ -85,6 +125,9 @@ def main(argv: list[str] | None = None) -> int:
                 model=model.name,
                 joint_coordinates=model.provenance.joint_coordinates,
                 actors=len(window.viewport.actors),
+                scene_objects=len(window.scene.document.objects),
+                scene_roundtrip=True,
+                scene_edit_undo_redo=True,
                 tcp_m=window.fk.tcp[:3, 3].tolist(),
                 render_window=window.viewport.plotter.render_window.GetClassName(),
             )
@@ -95,6 +138,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.report:
                 args.report.parent.mkdir(parents=True, exist_ok=True)
                 args.report.write_text(json.dumps(outcome, indent=2), encoding="utf-8")
+            window.scene.mark_saved()
             window.close()
             app.quit()
 

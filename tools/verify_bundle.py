@@ -37,6 +37,9 @@ subprocess.run(
 )
 outcome = json.loads(report.read_text(encoding="utf-8"))
 assert outcome["success"] is True, outcome
+assert outcome.get("scene_objects") == 5, outcome
+assert outcome.get("scene_roundtrip") is True, outcome
+assert outcome.get("scene_edit_undo_redo") is True, outcome
 assert outcome.get("version") == metadata["project"]["version"], outcome
 local_manifest = root / "models" / "hitbot_s922" / "model.json"
 if local_manifest.is_file():

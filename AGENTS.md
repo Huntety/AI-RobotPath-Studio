@@ -5,11 +5,12 @@
 시뮬레이션 → 제조사 변환 → 제어기 경로 재검증 → 코드 출력의 OLP 플랫폼이다.
 Windows/Python 3.12, PySide6, PyVista/VTK를 기본으로 한다. ROS는 필수가 아니다.
 사용자 지정 작업 경로는 Python/test/RobotStudioAI이며 상위 공용 가상환경
-`../Scripts/python.exe` (Python 3.12.14)를 사용한다. 추가 가상환경을 만들지 않는다.
+`../Scripts/python.exe`를 사용한다. 2026-11-27 실측 Python 3.12.10이며 추가 가상환경을 만들지 않는다.
 공용 환경의 기존 패키지는 불필요하게 변경하지 않는다.
 사용자 요청: 기존 robot_path_desktop, robot_path_studio 및 HITBOT 웹 스튜디오의 코드를
 재사용하지 않고 완전히 새로 구현한다. 기존 프로젝트는 수정하지 않는다.
-현재 요청은 Phase 0 및 Phase 1까지다. Phase 2 진행 전에 사용자 확인을 받는다.
+2026-11-26 사용자가 Phase 2 시작을 승인했다. Scene Manager, 객체 편집, 저장/불러오기,
+Undo/Redo와 통합 검증까지 진행한다. Phase 3은 별도 사용자 확인 후 진행한다.
 2026-11-26 추가 요청: 공식 S922 CAD를 찾아 적용한다. CAD 원본/변환 메시를 로컬 models/에
 보관하고 재배포 권한이 확인되기 전 GitHub에 업로드하지 않는다. 기존 앱 코드는 재사용하지 않는다.
 CAD 기준 상대각과 실제 제어기 영점/한계를 구분하고 미보정 상태를 GUI와 문서에 표시한다.
@@ -36,6 +37,12 @@ docs/known_issues.md를 읽고 git status, 현재 브랜치, 최근 이력과 �
 민감정보 점검 → Git Commit → GitHub Push → 원격 SHA 확인 → 보고.
 각 독립 Task 완료 시 자동 Commit 및 Push한다. Phase 종료까지 미루지 않는다.
 README, CHANGELOG, docs/development_status.md와 관련 설계·알려진 문제를 갱신한다.
+2026-11-27 사용자 지속 지시: 각 작업 완료 때 저장소 루트 README.md를 현재 기능/완료·미완료
+Phase/실행법/검증/한계/다음 작업 중심으로 새로 정리한다. 단순 누적 변경 로그로 대체하지 않는다.
+사용자가 main 첫 화면도 즉시 갱신하도록 명시 승인했다. 기능 브랜치와 main의 README를 함께
+갱신하며 main에는 README만 직접 반영한다. 기능 코드는 기존 브랜치/PR 절차를 유지한다.
+main에 코드가 미병합이면 README의 소스/문서 링크는 실제 기능 브랜치를 가리키게 한다.
+기존 README blob SHA를 확인하여 동시 변경을 보존하고, 게시 후 내용/원격 SHA를 재확인한다.
 실패 테스트나 미구현 기능을 완료로 보고하지 않는다. 빈 Commit을 만들지 않는다.
 사용자와 무관한 기존 변경사항을 stage/commit하지 않는다.
 
