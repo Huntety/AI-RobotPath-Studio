@@ -53,12 +53,12 @@ def main(argv: list[str] | None = None) -> int:
     from PySide6.QtCore import QTimer
     from PySide6.QtWidgets import QApplication
 
-    from robotstudio_ai.gui.main_window import MainWindow
+    from robotstudio_ai.gui.workbench import SceneWorkbench
 
     app = QApplication.instance() or QApplication(sys.argv[:1])
     app.setApplicationName("RobotStudio AI")
     try:
-        window = MainWindow(settings, model)
+        window = SceneWorkbench(settings, model)
     except Exception:
         logging.exception("GUI initialisation failed")
         return 3
@@ -74,7 +74,8 @@ def main(argv: list[str] | None = None) -> int:
             for (link, _), actor in window.viewport.actors.items():
                 np.testing.assert_allclose(actor.user_matrix, window.fk.links[link], atol=1e-12)
             window.reset_home()
-            window.viewport.fit()
+            window.load_demo()
+            window.scene_view.fit_all()
             app.processEvents()
             if args.screenshot:
                 args.screenshot.parent.mkdir(parents=True, exist_ok=True)
@@ -85,6 +86,7 @@ def main(argv: list[str] | None = None) -> int:
                 model=model.name,
                 joint_coordinates=model.provenance.joint_coordinates,
                 actors=len(window.viewport.actors),
+                scene_objects=len(window.scene.document.objects),
                 tcp_m=window.fk.tcp[:3, 3].tolist(),
                 render_window=window.viewport.plotter.render_window.GetClassName(),
             )
@@ -95,6 +97,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.report:
                 args.report.parent.mkdir(parents=True, exist_ok=True)
                 args.report.write_text(json.dumps(outcome, indent=2), encoding="utf-8")
+            window.scene.mark_saved()
             window.close()
             app.quit()
 

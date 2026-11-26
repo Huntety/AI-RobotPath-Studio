@@ -8,10 +8,10 @@ from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile
 
 import numpy as np
 import trimesh
-from pydantic import model_validator
+from pydantic import Field, model_validator
 
 from robotstudio_ai.core.scene import MeshAsset, MeshShape, SceneDocument
-from robotstudio_ai.core.schema import Record, Vec3
+from robotstudio_ai.core.schema import Finite, Record, Vec3
 
 MAX_ASSET_BYTES = 100_000_000
 MAX_PROJECT_BYTES = 300_000_000
@@ -22,6 +22,8 @@ class CameraState(Record):
     focal_point: Vec3
     view_up: Vec3
     parallel: bool = False
+    view_angle_deg: Finite = Field(default=30.0, gt=0, lt=180)
+    parallel_scale_m: Finite = Field(default=1.0, gt=0)
 
     @model_validator(mode="after")
     def valid_view(self):

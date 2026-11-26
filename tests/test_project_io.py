@@ -132,3 +132,22 @@ def test_camera_rejects_degenerate_view():
         CameraState(position=(0, 0, 0), focal_point=(0, 0, 0), view_up=(0, 0, 1))
     with pytest.raises(ValueError):
         CameraState(position=(0, 0, 1), focal_point=(0, 0, 0), view_up=(0, 0, 1))
+
+
+def test_robot_fingerprint_rejects_edited_kinematics(tmp_path):
+    from robotstudio_ai.core.scene import RobotSource
+    from robotstudio_ai.core.urdf import load_urdf
+    from robotstudio_ai.scene_profiles import model_fingerprint
+
+    path = tmp_path / "robot.urdf"
+    original = generic_config_path().parent / "../robots/generic_6axis/robot.urdf"
+    text = original.read_text(encoding="utf-8")
+    path.write_text(text, encoding="utf-8")
+    model = load_urdf(path)
+    source = RobotSource(
+        kind="urdf", model_id=model.name, path=str(path), fingerprint=model_fingerprint(model)
+    )
+    load_robot_source(source)
+    path.write_text(text.replace('xyz="0.32 0 0"', 'xyz="0.33 0 0"'), encoding="utf-8")
+    with pytest.raises(ValueError, match="changed"):
+        load_robot_source(source)

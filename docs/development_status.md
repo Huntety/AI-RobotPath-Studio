@@ -1,8 +1,16 @@
 # 개발 상태
 
-기준일: 2026-11-26 (Asia/Seoul)
+기준일: 2026-11-27 (Asia/Seoul)
 
 ## Phase 2: Task 2.1 장면 데이터/변경 이력
+- Task 2.2 Commit bbc04ad Push/원격 SHA 확인 완료.
+- Task 2.3: 장면 Tree/속성/생성·복제·삭제·표시·부모/위치·회전/Undo·Redo를 GUI에 연결했다.
+- 실제 VTK picking 및 box widget의 중간 마우스 drag, 회전 이벤트와 이력 병합을 검증했다.
+- 프로젝트/mesh 입출력은 worker에서 처리하며 로봇 상태/Tool/Base/카메라를 복원한다.
+- 로봇 형상·축/제한/메시 hash를 기록하고 저장 이후 모델 변경 시 로드를 거부한다.
+- 검증: 전체 99 passed (18.38s) + 실제 마우스 drag 추가 테스트 1 passed (5.99s), Ruff 통과.
+- 테스트 종료의 저장 확인 대기 문제는 pytest-qt before_close 절차로 해결했다.
+- 다음: Task 2.4 CLI/Windows 파일 복원 smoke, 최종 회귀/배포/문서/태그.
 - Task 2.1 Commit 48512f2 Push/원격 SHA 확인 완료.
 - Task 2.2 완료: mm/m STL/OBJ, 내용 hash 자산, .rsai ZIP/JSON 프로젝트 원자적 저장/로드.
 - 핵심 검증 80 passed (6.20s), 원본 삭제 후 자산 복구/변조/경로/형식 거부 포함.

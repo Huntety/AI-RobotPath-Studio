@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased — Phase 2
+- Task 2.3: 장면 Tree/속성 패널, primitive/mesh, 마우스 선택·이동·회전, 복제/삭제/표시.
+- GUI Undo/Redo, 로봇 Base/Tool/관절 및 카메라를 포함한 프로젝트 복원, 저장 확인.
+- 모델 fingerprint/변경 거부 및 부모/Tool 좌표계 연동. 전체 99 + native drag 1 test 통과.
 - Task 2.2: 내용 hash의 SI mesh 자산, .rsai portable 프로젝트, atomic 저장 및 엄격한 로드 검증.
 - STL/OBJ의 mm/m 단위와 원점을 보존하고 원본/제조사 CAD를 임의로 수정하거나 복사하지 않음.
 - 핵심 80 tests 통과. 원본 제거 후 복구/잘못된 archive·checksum·camera 검증 포함.

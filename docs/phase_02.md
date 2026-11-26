@@ -35,3 +35,27 @@ STL/OBJ import는 원본 단위를 mm/m 중 명시한다. 정점을 SI로 변환
 - 단위/원본 원점, 원본 파일 제거 후 다른 cache에서 복구, hash 변조/원자적 저장,
   잘못된 ZIP·metadata·camera 검사 통과. 중복 entry 테스트에 의도된 ZIP 경고 1개.
 - GUI 연결 및 최종 통합/배포 검증은 Task 2.3/2.4에서 수행한다.
+
+## Task 2.3 GUI 편집
+gui/workbench.py가 Phase 1 뷰어에 SceneManager를 연결한다. Primitive/좌표계 생성,
+STL/OBJ import, 복제/삭제, 계층 Tree의 표시 체크, 종류/크기/질량/플래그/JSON 속성,
+부모 기준 위치·자세를 편집할 수 있다. 로봇을 선택하면 Base 자세를 수정한다.
+고정 플래그는 이후 시뮬레이션용 상태이며 편집 잠금을 뜻하지 않는다.
+
+3D 클릭은 VTK picking으로 객체를 선택한다. box widget은 평행 이동/회전만 허용하고
+크기 조작은 숫자 입력으로 분리한다. 한 drag의 이벤트는 Undo 한 단계로 묶는다.
+[VTK box widget API](https://vtk.org/doc/nightly/html/classvtkBoxWidget.html)를 사용한다.
+`Esc`로 선택을 해제하고 카메라를 조작할 수 있다. 전체 맞춤은 보이는 객체/로봇 bounds를 사용한다.
+
+작업환경 저장/불러오기와 mesh import는 worker에서 수행한다. 파싱/모델 검증/mesh 준비가
+성공한 뒤 화면에 적용한다. 잘못된 프로젝트를 열면 기존 장면/로봇/카메라를 유지한다.
+저장되지 않은 변경은 새 장면/열기/종료 전에 저장·버리기·취소를 선택할 수 있다.
+로봇 모델을 전환하면 객체는 유지하지만 Undo 이력은 초기화한다. 모델이 다른 q를 되돌리는
+오류를 막기 위한 범위 제한이다. 모델 변경도 revision을 증가시킨다.
+
+로봇 source fingerprint에 링크/관절/제한/실제 mesh bytes를 포함한다. 같은 model_id여도
+내용이 달라졌으면 저장된 프로젝트를 그대로 복원하지 않는다.
+
+검증: 전체 99 tests + 추가 native 중간 마우스 drag 1 test 통과. 생성/크기/자세/플래그,
+복제/삭제/Undo/Redo, 부모/Tool/Base, VTK picker/변환, STL·OBJ 원본 제거 후 프로젝트 복원,
+잘못된 파일 보존, 저장 확인 취소, Generic↔S922 및 S922 프로젝트 복원을 실제 Qt/VTK로 확인했다.

@@ -193,6 +193,15 @@ def test_mesh_reference_and_robot_source_contract(scene):
         RobotSource(kind="builtin", model_id="x", path="secret")
 
 
+def test_nonfinite_custom_metadata_and_changed_model_invalidate(scene):
+    with pytest.raises(ValueError):
+        SceneObject(name="bad", properties={"nested": [float("nan")]})
+    token = scene.token()
+    source = scene.document.robot.source.model_copy(update={"fingerprint": "a" * 64})
+    scene.update_robot(scene.document.robot.model_copy(update={"source": source}))
+    assert not scene.is_current(token)
+
+
 def test_listener_failure_does_not_roll_back_committed_edit(scene):
     def failed(_):
         raise RuntimeError("deliberate observer failure")

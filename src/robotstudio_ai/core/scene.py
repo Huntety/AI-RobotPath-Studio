@@ -1,5 +1,6 @@
 """Scene data and editing history independent of Qt, VTK and planning engines."""
 
+import json
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -101,6 +102,7 @@ class SceneObject(Record):
     def valid_display(self):
         if not self.name.strip() or any(v < 0 or v > 1 for v in self.rgba):
             raise ValueError("Object needs a nonblank name and RGBA in [0, 1]")
+        json.dumps(self.properties, allow_nan=False)
         return self
 
 
@@ -110,6 +112,7 @@ class RobotSource(Record):
     kind: Literal["builtin", "local_s922", "profile", "urdf"]
     model_id: str
     path: str | None = None
+    fingerprint: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
 
     @model_validator(mode="after")
     def reference(self):
@@ -234,8 +237,8 @@ class SceneManager:
     def is_current(self, token: SceneToken) -> bool:
         return token == self.token()
 
-    def mark_saved(self) -> None:
-        self._saved_document = self._document.model_copy(deep=True)
+    def mark_saved(self, document: SceneDocument | None = None) -> None:
+        self._saved_document = (document or self._document).model_copy(deep=True)
 
     def end_gesture(self) -> None:
         if self._undo:
