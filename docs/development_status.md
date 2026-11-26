@@ -2,6 +2,14 @@
 
 기준일: 2026-11-27 (Asia/Seoul)
 
+## Phase 3: Task 3.1 완료 / 3.2 진행
+- 사용자 Phase 3 시작 승인. feature/phase-03-kinematics-collision에서 진행한다.
+- Jacobian/수치 IK/관절 한계/특이점 핵심 구현, 관련 36 tests 통과(2.37s), Ruff 통과.
+- 다음: FCL 자기·환경·부착물 충돌/거리/중간 구간, GUI 및 배포 검증.
+- Windows PyBullet/Coal wheel은 없고 python-fcl 0.7.0.11 설치·거리·pip check는 통과했다.
+- 기존 0.2.0 실행 파일은 Phase 2이며 Phase 3 배포본은 최종 통합 때 생성한다.
+- 상세 알고리즘/한계: docs/phase_03.md. Phase 4는 승인 전이다.
+
 ## README 지속 갱신 요청
 - 작업 완료마다 대표 README를 현재 상태로 재작성하고 main 첫 화면에도 README만 즉시 반영한다.
 - 사용자 명시 승인으로 AGENTS.md에 지속 규칙을 저장했다. 기능 코드의 PR 절차는 유지한다.

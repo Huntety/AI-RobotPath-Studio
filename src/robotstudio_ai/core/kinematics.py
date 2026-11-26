@@ -24,7 +24,7 @@ class FKResult:
 
 
 class KinematicsSolver(Protocol):
-    """Replaceable FK boundary; IK/Jacobian contracts are added in Phase 3."""
+    """Replaceable forward and geometric Jacobian boundary."""
 
     def forward(
         self,
@@ -34,6 +34,15 @@ class KinematicsSolver(Protocol):
         base: Pose = IDENTITY_POSE,
         tool_offset: Pose = IDENTITY_POSE,
     ) -> FKResult: ...
+
+    def jacobian(
+        self,
+        model: RobotModel,
+        positions: Sequence[float],
+        tool_link: str,
+        base: Pose = IDENTITY_POSE,
+        tool_offset: Pose = IDENTITY_POSE,
+    ) -> Matrix: ...
 
 
 class TreeKinematics:
@@ -73,3 +82,37 @@ class TreeKinematics:
         if state.names != tuple(j.name for j in model.active_joints):
             raise ValueError("Joint state name order does not match model")
         return self.forward(model, state.positions, tool_link, **kwargs)
+
+    def jacobian(
+        self,
+        model: RobotModel,
+        positions: Sequence[float],
+        tool_link: str,
+        base: Pose = IDENTITY_POSE,
+        tool_offset: Pose = IDENTITY_POSE,
+    ) -> Matrix:
+        """World geometric TCP Jacobian [linear; angular], active-joint name order.
+
+        Only ancestors of the selected tool contribute, including tool offset.
+        Prismatic columns have linear velocity only; branch columns remain zero.
+        """
+        result = self.forward(model, positions, tool_link, base, tool_offset)
+        by_child = {joint.child: joint for joint in model.joints}
+        ancestors, link = set(), tool_link
+        while link in by_child:
+            joint = by_child[link]
+            ancestors.add(joint.name)
+            link = joint.parent
+        jacobian = np.zeros((6, len(model.active_joints)))
+        for i, joint in enumerate(model.active_joints):
+            if joint.name not in ancestors:
+                continue
+            origin = result.links[joint.parent] @ joint.origin
+            axis = origin[:3, :3] @ np.asarray(joint.axis)
+            if joint.kind == "prismatic":
+                jacobian[:3, i] = axis
+            else:
+                jacobian[:3, i] = np.cross(axis, result.tcp[:3, 3] - origin[:3, 3])
+                jacobian[3:, i] = axis
+        jacobian.setflags(write=False)
+        return jacobian

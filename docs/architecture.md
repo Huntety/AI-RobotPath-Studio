@@ -32,6 +32,9 @@ tests/는 계산과 GUI를 구분한다. docs/는 상태·규약·사양·로드
 PyBullet, LLM 및 제조사 코드 생성은 이후 Phase로 남긴다.
 
 ## 설계 기록
+- Phase 3: TreeKinematics의 geometric Jacobian과 별도 BoundedIK가 같은 RobotModel/FK를 쓴다.
+  IK는 bounded TRF, SO(3) log의 analytic derivative, 다중 초기값을 사용한다.
+  실패/특이점/수렴 오차를 반환하고, 충돌 제약은 후보 accept 경계로 연결한다.
 - 2026-11-25: 별도 RobotStudioAI 폴더 및 지정 origin의 초기 이력을 보존한다.
 - 사용자 지시에 따라 Python/test/RobotStudioAI로 이동하고 기존 공용 가상환경을 사용한다.
 - Generic 모델로 초기 검증한다. 기존 웹 스튜디오의 근사 DH를 제조사 사양으로 재사용하지 않는다.

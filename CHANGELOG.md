@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — Phase 3
+- Task 3.1: World geometric Jacobian, bounded 다중 초기값 IK, SO(3) 자세 미분, SVD 특이점 진단.
+- Jacobian/IK 및 기존 로봇 테스트 36 passed. 사용자 승인으로 Phase 3 시작, Phase 4는 대기.
+
 ## Unreleased — 문서 운영
 - 사용자 요청으로 작업 완료마다 대표 README를 현재 상태로 재작성하고 main README도 즉시 갱신.
 - 기능 코드 병합과 문서 게시를 구분하고 지속 규칙/검증 결과/실행법/로드맵을 정리.
