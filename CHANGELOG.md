@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — 문서 운영
+- 사용자 요청으로 작업 완료마다 대표 README를 현재 상태로 재작성하고 main README도 즉시 갱신.
+- 기능 코드 병합과 문서 게시를 구분하고 지속 규칙/검증 결과/실행법/로드맵을 정리.
+
 ## 0.2.0 — Phase 2 (2026-11-27)
 - Task 2.4: 전체 100 tests, S922 GUI 편집/Undo/Redo/프로젝트 복원 smoke 통과.
 - Windows 번들의 Python PATH 없는 외부 cwd에서도 같은 시나리오 통과.

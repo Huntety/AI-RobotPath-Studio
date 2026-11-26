@@ -2,6 +2,11 @@
 
 기준일: 2026-11-27 (Asia/Seoul)
 
+## README 지속 갱신 요청
+- 작업 완료마다 대표 README를 현재 상태로 재작성하고 main 첫 화면에도 README만 즉시 반영한다.
+- 사용자 명시 승인으로 AGENTS.md에 지속 규칙을 저장했다. 기능 코드의 PR 절차는 유지한다.
+- README의 코드/문서 링크는 실제 기능 브랜치를 지정하여 main 미병합 상태에서도 유효하게 한다.
+
 ## Phase 2: Task 2.1~2.4 구현·로컬 검증 완료 (0.2.0)
 - 사용자 승인 범위: Scene Manager, 작업환경 GUI, 자산/프로젝트, Undo/Redo 및 통합 배포.
 - Task 2.1: 검증된 장면/부모 좌표계/100개 이력/revision. Commit 48512f2 Push/원격 확인.

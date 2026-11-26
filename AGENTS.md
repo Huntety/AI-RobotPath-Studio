@@ -37,6 +37,12 @@ docs/known_issues.md를 읽고 git status, 현재 브랜치, 최근 이력과 �
 민감정보 점검 → Git Commit → GitHub Push → 원격 SHA 확인 → 보고.
 각 독립 Task 완료 시 자동 Commit 및 Push한다. Phase 종료까지 미루지 않는다.
 README, CHANGELOG, docs/development_status.md와 관련 설계·알려진 문제를 갱신한다.
+2026-11-27 사용자 지속 지시: 각 작업 완료 때 저장소 루트 README.md를 현재 기능/완료·미완료
+Phase/실행법/검증/한계/다음 작업 중심으로 새로 정리한다. 단순 누적 변경 로그로 대체하지 않는다.
+사용자가 main 첫 화면도 즉시 갱신하도록 명시 승인했다. 기능 브랜치와 main의 README를 함께
+갱신하며 main에는 README만 직접 반영한다. 기능 코드는 기존 브랜치/PR 절차를 유지한다.
+main에 코드가 미병합이면 README의 소스/문서 링크는 실제 기능 브랜치를 가리키게 한다.
+기존 README blob SHA를 확인하여 동시 변경을 보존하고, 게시 후 내용/원격 SHA를 재확인한다.
 실패 테스트나 미구현 기능을 완료로 보고하지 않는다. 빈 Commit을 만들지 않는다.
 사용자와 무관한 기존 변경사항을 stage/commit하지 않는다.
 
