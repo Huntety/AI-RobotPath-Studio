@@ -190,6 +190,7 @@ class SceneWorkbench(MainWindow):
             file_menu.insertAction(first, action)
         first.setShortcut("Ctrl+Shift+O")
         edit = self.menuBar().addMenu("편집")
+        self.menuBar().insertMenu(menus[1], edit)
         self.undo_action = QAction("되돌리기", self)
         self.undo_action.setShortcut(QKeySequence.StandardKey.Undo)
         self.undo_action.triggered.connect(self.scene.undo)
@@ -201,7 +202,22 @@ class SceneWorkbench(MainWindow):
         edit.addAction("객체 복제", self.duplicate_selected)
         edit.addAction("객체 삭제", self.delete_selected)
         view = menus[1].menu()
-        view.addAction("전체 작업환경 맞춤", self.scene_view.fit_all)
+        for action in view.actions():
+            if action.text() == "화면 맞춤":
+                action.triggered.disconnect()
+                action.triggered.connect(self.scene_view.fit_all)
+        help_action = menus[2].menu().actions()[0]
+        help_action.triggered.disconnect()
+        help_action.triggered.connect(
+            lambda: QMessageBox.information(
+                self,
+                "Phase 2 작업환경 편집기",
+                "로봇 자세와 작업환경 객체를 편집하고 STL/OBJ를 가져올 수 있습니다.\n"
+                "작업환경 저장·불러오기와 Undo/Redo를 제공합니다.\n"
+                "S922 관절값은 CAD 기준 상대각입니다. "
+                "충돌·경로·실제 로봇 구동은 제공하지 않습니다.",
+            )
+        )
         escape = QAction(self)
         escape.setShortcut("Escape")
         escape.triggered.connect(lambda: self.select_item(""))
@@ -684,6 +700,7 @@ class SceneWorkbench(MainWindow):
             widget.setEnabled(not value)
         self.undo_action.setEnabled(not value and self.scene.can_undo)
         self.redo_action.setEnabled(not value and self.scene.can_redo)
+        self.editor.apply_button.setEnabled(not value and self.editor.current is not None)
         self._sync_view()
         if value:
             self.statusBar().showMessage("작업환경 파일 처리 중…")

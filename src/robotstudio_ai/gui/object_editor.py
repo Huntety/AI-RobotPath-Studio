@@ -165,6 +165,7 @@ class ObjectEditor(QWidget):
     def set_selection(self, value: SceneObject | SceneRobot | None, document: SceneDocument):
         self.current = value
         self.setEnabled(value is not None)
+        self.apply_button.setEnabled(value is not None)
         if value is None:
             self.heading.setText("장면 객체 또는 로봇을 선택하세요")
             return

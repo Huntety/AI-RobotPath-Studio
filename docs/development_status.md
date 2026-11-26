@@ -2,29 +2,28 @@
 
 기준일: 2026-11-27 (Asia/Seoul)
 
-## Phase 2: Task 2.1 장면 데이터/변경 이력
-- Task 2.2 Commit bbc04ad Push/원격 SHA 확인 완료.
-- Task 2.3: 장면 Tree/속성/생성·복제·삭제·표시·부모/위치·회전/Undo·Redo를 GUI에 연결했다.
-- 실제 VTK picking 및 box widget의 중간 마우스 drag, 회전 이벤트와 이력 병합을 검증했다.
-- 프로젝트/mesh 입출력은 worker에서 처리하며 로봇 상태/Tool/Base/카메라를 복원한다.
-- 로봇 형상·축/제한/메시 hash를 기록하고 저장 이후 모델 변경 시 로드를 거부한다.
-- 검증: 전체 99 passed (18.38s) + 실제 마우스 drag 추가 테스트 1 passed (5.99s), Ruff 통과.
-- 테스트 종료의 저장 확인 대기 문제는 pytest-qt before_close 절차로 해결했다.
-- 다음: Task 2.4 CLI/Windows 파일 복원 smoke, 최종 회귀/배포/문서/태그.
-- Task 2.1 Commit 48512f2 Push/원격 SHA 확인 완료.
-- Task 2.2 완료: mm/m STL/OBJ, 내용 hash 자산, .rsai ZIP/JSON 프로젝트 원자적 저장/로드.
-- 핵심 검증 80 passed (6.20s), 원본 삭제 후 자산 복구/변조/경로/형식 거부 포함.
-- 다음: GUI 객체 편집/부모/마우스 변환, 통합/Windows 배포. docs/phase_02.md 참조.
-- 사용자 Phase 2 진행 승인. 브랜치 feature/phase-02-scene-editor.
-- 완료: 검증된 장면 객체/형상/로봇 상태/mesh 자산 계약, 부모 좌표계 그래프.
-- 완료: 추가/수정/복제/하위 객체 삭제, 100개 이력 Undo/Redo, gesture 병합.
-- revision은 모든 변경과 Undo/Redo에서도 증가한다. 이전 token은 다시 유효해지지 않는다.
-- World/Base/Tool/객체 부모 합성 및 월드 자세 보존 reparent를 구현했다.
-- 실제 검증: Scene/좌표/기존 기구학/CAD 테스트 67 passed (3.30s), Ruff 통과.
-- 다음: Task 2.2 portable 프로젝트/mesh 자산, Task 2.3 GUI, Task 2.4 통합/배포.
-- GUI에 장면 편집은 아직 연결 전이다. Phase 3 충돌/경로 검증은 구현하지 않았다.
+## Phase 2: Task 2.1~2.4 구현·로컬 검증 완료 (0.2.0)
+- 사용자 승인 범위: Scene Manager, 작업환경 GUI, 자산/프로젝트, Undo/Redo 및 통합 배포.
+- Task 2.1: 검증된 장면/부모 좌표계/100개 이력/revision. Commit 48512f2 Push/원격 확인.
+- Task 2.2: mm/m STL·OBJ, hash 자산, .rsai 원자적 저장/엄격한 로드. Commit bbc04ad 원격 확인.
+- Task 2.3: Tree/속성/3D 선택·이동·회전, 생성/복제/삭제/표시, worker 입출력.
+  로봇 관절/Base/Tool 및 카메라 복원. Commit c4a2bb2 Push/원격 확인.
+- Task 2.4: 전체 100 passed (18.180s), Ruff check/format/pip check 통과.
+- 실제 VTK 마우스 drag, S922/Generic 전환, 원본 STL/OBJ 삭제 후 복원,
+  잘못된 프로젝트의 기존 장면 보존, 미저장 취소/버리기를 포함한다.
+- 소스 GUI smoke: S922 13 actors/5개 환경 객체, 편집·Undo/Redo·파일 저장/복원 통과.
+- wheel 0.2.0: 소스 경로 없는 별도 폴더의 패키지 자원/Generic FK 검사 통과.
+- Windows 0.2.0: Python/venv/Qt 경로 없는 외부 cwd에서 S922/5객체/편집/Undo·Redo/
+  프로젝트 복원 통과. 폴더 합계 599,959,809 bytes. 상세 EXE hash는 docs/phase_02.md 참조.
+- 성능: 100객체/100회 CPU 평균 world transforms 2.019ms, 검증된 편집 5.511ms.
+  현재 PC 측정이며 렌더링을 포함하지 않는다. 대규모 장면 성능을 보장하지 않는다.
+- 지정 공용 Python은 현재 3.12.10이다. 새 가상환경/기존 앱 코드 재사용 없음.
+- 브랜치 feature/phase-02-scene-editor. 최종 Windows/Commit/Push/tag/CI 결과는
+  docs/phase_02.md 및 해당 원격 Git refs/Actions를 기준으로 한다.
+- S922 제어기 영점/양의 방향/한계/동역학/충돌 형상은 미확정이다.
+- Phase 3 IK/충돌 검사는 아직 구현하지 않았고 별도 사용자 승인 후 진행한다.
 
-## 현재 작업: 공식 S922 CAD 적용 (0.1.1)
+## 이전 기록: 공식 S922 CAD 적용 (0.1.1)
 - 사용자 추가 요청에 따라 Phase 1 보완 작업으로 구현했다. Phase 2는 시작하지 않았다.
 - 공식 STEP V3.0 2024-04-29의 S922-1~7을 새로 분석/변환했다. 기존 앱 자료는 재사용하지 않았다.
 - 7개 강체/13재질/199,329 삼각형, 원래 CAD 조립 자세와 면 색상을 보존했다.

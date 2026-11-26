@@ -105,7 +105,8 @@ def test_bad_archives_rejected(document, tmp_path, attack):
         if attack == "traversal":
             archive.writestr("../outside.stl", "bad")
         elif attack == "duplicate":
-            archive.writestr("scene.json", json.dumps(metadata))
+            with pytest.warns(UserWarning, match="Duplicate name"):
+                archive.writestr("scene.json", json.dumps(metadata))
         elif attack == "bad_hash":
             archive.writestr("assets/" + "0" * 64 + ".stl", "bad")
     with pytest.raises(ValueError):

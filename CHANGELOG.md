@@ -1,15 +1,18 @@
 # Changelog
 
-## Unreleased — Phase 2
+## 0.2.0 — Phase 2 (2026-11-27)
+- Task 2.4: 전체 100 tests, S922 GUI 편집/Undo/Redo/프로젝트 복원 smoke 통과.
+- Windows 번들의 Python PATH 없는 외부 cwd에서도 같은 시나리오 통과.
+- 카메라 전체 맞춤/속성 적용 버튼/도움말을 정리하고 wheel 0.2.0 독립 자원/FK 검증.
 - Task 2.3: 장면 Tree/속성 패널, primitive/mesh, 마우스 선택·이동·회전, 복제/삭제/표시.
 - GUI Undo/Redo, 로봇 Base/Tool/관절 및 카메라를 포함한 프로젝트 복원, 저장 확인.
 - 모델 fingerprint/변경 거부 및 부모/Tool 좌표계 연동. 전체 99 + native drag 1 test 통과.
 - Task 2.2: 내용 hash의 SI mesh 자산, .rsai portable 프로젝트, atomic 저장 및 엄격한 로드 검증.
 - STL/OBJ의 mm/m 단위와 원점을 보존하고 원본/제조사 CAD를 임의로 수정하거나 복사하지 않음.
-- 핵심 80 tests 통과. 원본 제거 후 복구/잘못된 archive·checksum·camera 검증 포함.
+- 원본 제거 후 복구/잘못된 archive·checksum·camera 검증 포함.
 - Task 2.1: 장면/객체/형상/자산/로봇 상태 계약과 원자적 Scene Manager.
 - 부모 좌표계, 복제/하위 삭제, bounded Undo/Redo, 단조 revision/token 무효화.
-- Scene 및 기존 핵심 계산 테스트 67개 통과. GUI/프로젝트 파일은 후속 Task.
+- Scene 및 기존 핵심 계산 회귀 검증 포함. Phase 3은 별도 승인 후 진행.
 
 ## 0.1.1 — S922 공식 CAD (2026-11-26)
 - 공식 STEP V3.0 2024-04-29의 7개 부품/13재질/199,329 삼각형을 로컬 모델로 적용.

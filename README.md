@@ -2,7 +2,7 @@
 
 Windows용 산업용 로봇 오프라인 프로그래밍 플랫폼. 자연어 작업 계획부터 기구학,
 충돌 회피, 시뮬레이션, 검증된 제조사 코드 출력까지 단계적으로 개발한다.
-Phase 0/1의 Generic URDF/FK 및 Windows GUI에 **공식 HITBOT S922 STEP CAD**를 추가했다.
+v0.2.0은 **공식 HITBOT S922 STEP CAD**와 작업환경 편집·프로젝트 저장을 제공한다.
 준비된 로컬 CAD가 있으면 S922를 기본으로 표시한다. 제어기 영점/방향은 미보정이며,
 관절값은 CAD 조립 자세 기준 상대각이다. 실제 로봇 연결/구동 기능은 제공하지 않는다.
 
@@ -31,8 +31,10 @@ PyBullet은 충돌/시뮬레이션 Phase에서 연결한다.
 - 비동기 URDF/STL/OBJ 로딩 및 실패 복구. 모든 형상과 TCP에 같은 FK 결과 적용.
 - S922 V3.0(2024-04-29) 공식 CAD 7개 부품, 6개 관절 조작, Generic↔S922 전환.
 - IK·충돌·경로·작업 계획·LLM·제조사 코드 출력은 후속 Phase에 구현한다.
-- Phase 2 진행 중: Scene Manager/객체 데이터/부모 좌표계/Undo·Redo/revision 구현.
-  작업환경 GUI 및 저장 기능은 순차적으로 연결하고 있다.
+- 상자/원통/구/좌표계, STL/OBJ(mm/m) 가져오기, 계층 Tree와 객체 속성 편집.
+- 3D 선택·이동·회전, 복제/삭제/표시, World/Base/Tool/객체 부모 좌표계.
+- Undo/Redo, 변경 revision, .rsai 프로젝트 저장·복원(로봇 자세/Base/TCP/카메라 포함).
+- 메시 원본을 제거해도 프로젝트의 내장 자산으로 복원한다. 로봇 CAD는 별도 준비한다.
 
 ## 독립 Windows 실행 파일
 로컬 빌드 결과: `dist/RobotStudioAI/RobotStudioAI.exe`.
@@ -69,6 +71,7 @@ Python 설치 없이 실행하는 onedir 번들이다. 현재 PC에서 확인하
 - [로드맵](docs/roadmap.md), [에이전트 규칙](AGENTS.md)
 - [Phase 0/1 보고서](docs/phase_01_report.md)
 - [S922 공식 CAD 적용 보고](docs/s922_cad.md)
+- [Phase 2 구현·검증 보고](docs/phase_02.md)
 
 개별 Task 완료 시 테스트·문서 갱신·Commit·Push·원격 SHA 확인을 수행한다.
-Phase 2 이상은 Phase 1 결과 보고 후 사용자 확인을 받아 진행한다.
+Phase 2 구현·검증을 완료했다. Phase 3은 결과 보고 후 사용자 확인을 받아 진행한다.

@@ -29,12 +29,12 @@ STL/OBJ import는 원본 단위를 mm/m 중 명시한다. 정점을 SI로 변환
 파일을 임의 경로로 압축 해제하지 않고 검증된 메시만 관리 캐시에 기록한다.
 카메라 position/focal_point/view_up도 검사해 보관할 수 있다.
 
-## 현재 검증
+## 단계별 검증 이력
 - Task 2.1 및 기존 핵심: 67 passed (3.30s).
 - Task 2.2 포함 전체 headless 핵심: 80 passed (6.20s), 기존 GUI 8개는 별도 분리.
 - 단위/원본 원점, 원본 파일 제거 후 다른 cache에서 복구, hash 변조/원자적 저장,
   잘못된 ZIP·metadata·camera 검사 통과. 중복 entry 테스트에 의도된 ZIP 경고 1개.
-- GUI 연결 및 최종 통합/배포 검증은 Task 2.3/2.4에서 수행한다.
+- 이후 GUI 연결 및 최종 통합/배포 검증은 아래 Task 2.3/2.4에 기록한다.
 
 ## Task 2.3 GUI 편집
 gui/workbench.py가 Phase 1 뷰어에 SceneManager를 연결한다. Primitive/좌표계 생성,
@@ -59,3 +59,42 @@ STL/OBJ import, 복제/삭제, 계층 Tree의 표시 체크, 종류/크기/질�
 검증: 전체 99 tests + 추가 native 중간 마우스 drag 1 test 통과. 생성/크기/자세/플래그,
 복제/삭제/Undo/Redo, 부모/Tool/Base, VTK picker/변환, STL·OBJ 원본 제거 후 프로젝트 복원,
 잘못된 파일 보존, 저장 확인 취소, Generic↔S922 및 S922 프로젝트 복원을 실제 Qt/VTK로 확인했다.
+
+## Task 2.4 최종 통합·배포 검증 (2026-11-27)
+- pytest 전체: **100 passed, 18.180s, failures/errors/skipped 각 0**.
+- Ruff check/format 및 pip check 통과. 중복 ZIP 거부 검사의 의도된 경고도 명시적으로 검증했다.
+- 소스 GUI smoke: 0.2.0, S922 CAD 상대각/13 actors, 5개 예제 환경 객체.
+  관절/FK/actor 행렬 대조, 객체 숫자 편집/Undo/Redo/token 무효화 및
+  비동기 .rsai 저장→객체 삭제→복원까지 성공했다. 실제 OpenGL 화면도 확인했다.
+- wheel 0.2.0의 별도 폴더 로드/자원/Generic FK 확인 통과. 제조사 CAD는 wheel에 포함하지 않는다.
+- Windows 0.2.0 onedir: Python/venv/Qt 경로를 제거한 외부 cwd에서 위와 같은
+  S922/5객체/편집/Undo·Redo/프로젝트 복원 smoke 통과. OpenCascade는 번들에 포함하지 않는다.
+  배포 폴더 합계 599,959,809 bytes, EXE 24,208,271 bytes.
+  EXE SHA256: `3FE8820A5391130C89BC77A83BFAA2D08A8B1DB555054F38041EC3328467D026`.
+- 100객체를 100회 계산한 CPU 평균: world transforms 2.019ms, 검증된 편집 5.511ms.
+  현재 PC 측정이며 렌더/GPU/파일 처리는 제외한다. 다른 환경의 보장 수치가 아니다.
+
+## 완료 보고
+1. **개발 상태**: Phase 2 Task 2.1~2.4 기능 구현과 통합 검증을 완료했다.
+   Phase 3 IK/충돌/경로 계획과 실제 장비 구동은 포함하지 않는다.
+2. **구현 내용**: 장면/계층/속성, primitive·STL·OBJ, 3D picking/rigid widget,
+   Undo/Redo와 변경 무효화, 로봇/Base/TCP/카메라 및 자산 내장 프로젝트를 제공한다.
+   카메라 전체 맞춤과 스크롤 밖 변경 적용 버튼, 도움말/메뉴를 정리했다.
+3. **변경 파일**: core/scene.py, core/project_io.py, scene_profiles.py,
+   gui/scene_view.py, gui/object_editor.py, gui/workbench.py 및 관련 테스트를 생성했다.
+   app.py/settings.py/버전/배포 검증 도구와 README·설계·사용법·상태 문서를 수정했다.
+   삭제 파일은 없다. 원본 CAD/메시/실행 파일/테스트 산출물은 Git에서 제외한다.
+4. **설계**: 검증된 단일 SceneDocument, bounded snapshot 이력, FK 기반 부모 변환,
+   단조 revision, 내용 hash 메시, atomic ZIP, 모델 fingerprint와 worker 입출력을 사용한다.
+5. **검증**: 위 실측을 참조한다. 실제 S922 제어기 및 다른 PC/GPU의 실행은 미검증이다.
+6. **Git**: feature/phase-02-scene-editor. Task 2.1 48512f2, 2.2 bbc04ad,
+   2.3 c4a2bb2는 각각 Push/원격 SHA 확인했다. 최종 Task 2.4 SHA는 이 문서를 포함하는
+   Commit 및 v0.2.0 tag로 식별한다. 최종 Push/tag/CI는 완료 답변의 확인 결과를 참조한다.
+7. **한계**: S922 제어기 영점/방향/한계/관성 미보정, 충돌 geometry 미지정.
+   질량/고정/충돌/작업 대상은 메타데이터다. 1,000객체/100계층/100 Undo 제한이 있다.
+   OBJ 재질 미지원, 제조사/외부 로봇 모델은 다른 PC에 별도 준비해야 한다.
+8. **실행**: 프로젝트에서 `../Scripts/python.exe main.py` 또는 start_robotstudio.cmd.
+   독립본은 dist/RobotStudioAI/RobotStudioAI.exe이며 _internal/models를 함께 유지한다.
+   예제 환경→객체 속성→Undo/Redo→Ctrl+S/Ctrl+O로 기능을 확인할 수 있다.
+9. **다음**: 사용자 승인 후 Phase 3의 수치 IK/Jacobian 및 자기/환경/부착물 충돌과
+   edge 검사를 구현한다. 먼저 S922 좌표 보정 자료와 Windows 충돌 엔진 호환성을 확인한다.

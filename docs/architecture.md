@@ -20,7 +20,7 @@ RobotModel은 링크/관절/제한/출처를, KinematicsSolver는 관절 상태�
 | JointState | names, positions | 이름 순서 명시, 회전 rad/직동 m |
 | ModelProvenance | model_id, synthetic, source, hardware_validated | 제조사/가상 모델 구분 |
 | Link transform | link name → 4x4 | T_world_link |
-| Scene (Phase 2 설계) | UUID, parent, geometry, pose, flags, revision | 렌더/충돌 공통 원본 |
+| Scene (Phase 2 구현) | UUID, parent, geometry, pose, flags, revision | 렌더/향후 충돌 공통 원본 |
 | Path (Phase 4 설계) | ordered JointState, scene/model revision | 시간 없음 |
 | Trajectory (Phase 4 설계) | t, q, qdot, qddot | s, SI |
 | Validation (향후) | inputs hash/revisions, checks, failures, resolution | 변경 시 무효화 |
@@ -29,7 +29,7 @@ RobotModel은 링크/관절/제한/출처를, KinematicsSolver는 관절 상태�
 src 레이아웃을 사용해 설치된 패키지와 테스트 import를 일치시킨다.
 패키지 data/에 자체 제작 URDF와 기본 설정을 포함하여 wheel/Windows 번들에서 경로를 유지한다.
 tests/는 계산과 GUI를 구분한다. docs/는 상태·규약·사양·로드맵을 관리한다.
-장면 편집, PyBullet, LLM 및 제조사 코드 생성은 이후 Phase로 남긴다.
+PyBullet, LLM 및 제조사 코드 생성은 이후 Phase로 남긴다.
 
 ## 설계 기록
 - 2026-11-25: 별도 RobotStudioAI 폴더 및 지정 origin의 초기 이력을 보존한다.
@@ -62,3 +62,10 @@ tests/는 계산과 GUI를 구분한다. docs/는 상태·규약·사양·로드
   검증한다. 사용자 객체 mesh는 내장하고 로봇 모델은 portable ID 또는 명시적인 외부 파일 참조다.
 - scene_profiles.py가 모델 참조를 로컬에서 해석한다. 네트워크/코드 실행은 수행하지 않는다.
 - AppSettings는 읽은 설정 경로를 비직렬화 private metadata로 유지해 프로젝트 출처를 결정한다.
+- SceneWorkbench는 SceneManager의 변경 통지를 받아 Tree/속성/FK/SceneView를 갱신한다.
+  VTK actor나 위젯의 행렬을 독립적인 장면 상태로 사용하지 않는다.
+- 프로젝트/mesh 처리는 ResourceJob에서 실행하고 성공한 결과만 GUI 스레드에 반영한다.
+  같은 geometry의 변환 변경에는 기존 actor를 사용하며, 큰 mesh 표면도 worker에서 준비한다.
+- 모델 fingerprint는 링크/축/한계/메시 bytes를 포함한다. 변경된 모델의 프로젝트 로드를 거부한다.
+- 카메라 projection/view_angle/parallel_scale까지 저장한다. 저장 중 snapshot과 현재 상태를
+  구분하여 이후 편집이 잘못 저장 완료로 표시되지 않게 한다.

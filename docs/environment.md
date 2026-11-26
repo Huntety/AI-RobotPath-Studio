@@ -1,5 +1,9 @@
 # 개발 환경과 호환성 확인
 
+2026-11-27 Phase 2 최종 확인: 지정 공용 `../Scripts/python.exe --version`은 Python 3.12.10이다.
+이전 3.12.14 기록과 다르므로 현재 명령 출력이 기준이다. 가상환경/인터프리터를 새로 만들거나
+교체하지 않았다. robotstudio-ai만 0.2.0 editable로 갱신했고 pip check를 통과했다.
+
 2026-11-26 S922 CAD 변환용 optional extra에 cadquery-ocp-novtk 7.9.3.1 및
 cadquery-ocp-proxy 7.9.3.1을 추가 설치했다. 기존 VTK 9.7.2/PySide6/NumPy를 변경하지 않았다.
 STEP 변환은 이 extra만 사용하며 GUI/EXE에는 OpenCascade를 포함하지 않는다.
