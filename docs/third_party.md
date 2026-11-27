@@ -1,6 +1,6 @@
 # 배포 의존성
 
-Phase 3 충돌 검사는 python-fcl 0.7.0.11(MIT)의 Windows wheel을 사용한다.
+Phase 3 충돌 검사는 python-fcl 0.7.0.11(BSD 3-Clause)의 Windows wheel을 사용한다.
 FCL(BSD), libccd(BSD)의 native binary와 해당 wheel의 license/metadata도 배포에 포함한다.
 Cython은 wheel metadata 의존성으로 설치하며 기존 GUI/수치 패키지는 변경하지 않는다.
 

@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased — Phase 3
+- Task 3.3: World TCP 목표/IK 후보 적용, 현재 자세/관절 구간 검사 GUI, 접점·근접 선·위반 윤곽.
+- 검사 정책/허용 쌍 편집·복원, stale worker 결과 폐기. 전체 124 tests/Ruff/pip check 통과.
 - Task 3.2: FCL 자기/환경/부착물 충돌·거리·접점, 허용/자동 제외 쌍과 저장 정책.
 - 보수적 점 이동량 envelope를 사용하는 관절 구간 검사, 누락 형상/예산 초과 통과 금지.
 - 메시 convex hull/CAD 외형 명시적 근사. 전체 headless 핵심 99 passed.

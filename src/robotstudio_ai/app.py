@@ -55,12 +55,12 @@ def main(argv: list[str] | None = None) -> int:
     from PySide6.QtCore import QTimer
     from PySide6.QtWidgets import QApplication
 
-    from robotstudio_ai.gui.workbench import SceneWorkbench
+    from robotstudio_ai.gui.planning_workbench import PlanningWorkbench
 
     app = QApplication.instance() or QApplication(sys.argv[:1])
     app.setApplicationName("RobotStudio AI")
     try:
-        window = SceneWorkbench(settings, model)
+        window = PlanningWorkbench(settings, model)
     except Exception:
         logging.exception("GUI initialisation failed")
         return 3
@@ -115,6 +115,21 @@ def main(argv: list[str] | None = None) -> int:
                 assert window.scene.document.objects == snapshot.objects
                 assert window.scene.document.robot == snapshot.robot
                 assert not window.scene.dirty
+            window.analysis.fallback.setChecked(True)
+            window.apply_collision_policy()
+            window.check_collision()
+            wait_for_io()
+            assert window.collision_report is not None and window.collision_report.complete
+            window.analysis.collision_filter.setChecked(False)
+            window.goal_from_current()
+            window.solve_ik()
+            wait_for_io()
+            assert window.ik_result is not None and window.ik_result.success
+            window.capture_edge_start()
+            window.check_edge()
+            wait_for_io()
+            assert window.edge_report is not None and window.edge_report.complete
+            window.tabs.setCurrentIndex(3)
             app.processEvents()
             if args.screenshot:
                 args.screenshot.parent.mkdir(parents=True, exist_ok=True)
@@ -128,6 +143,9 @@ def main(argv: list[str] | None = None) -> int:
                 scene_objects=len(window.scene.document.objects),
                 scene_roundtrip=True,
                 scene_edit_undo_redo=True,
+                ik_solved=True,
+                collision_complete=True,
+                edge_complete=True,
                 tcp_m=window.fk.tcp[:3, 3].tolist(),
                 render_window=window.viewport.plotter.render_window.GetClassName(),
             )

@@ -64,3 +64,22 @@ CollisionSettings.use_visual_fallback을 명시한 경우에만 CAD 외형을 �
 - [python-fcl 배포](https://pypi.org/project/python-fcl/)
 - [python-fcl 형상/거리 API](https://github.com/BerkeleyAutomation/python-fcl)
 - [PyBullet 배포](https://pypi.org/project/pybullet/)
+
+## Task 3.3 GUI 구현·검증
+- PlanningWorkbench는 Phase 2 편집기를 확장해 IK / 충돌 탭을 제공한다.
+  목표는 World mm/degree이며 현재 TCP 또는 선택 객체의 World 자세를 가져올 수 있다.
+- IK는 worker에서 계산하고 오차/rank/condition/평가 수/CAD 상대각 여부를 표시한다.
+  기본 후보 필터는 충돌/여유거리를 확인한다. 충돌 미검사 모드는 별도 표시한다.
+  성공 후보만 적용하며 적용/Undo를 포함한 장면 변경은 이전 분석 결과를 무효화한다.
+- 현재 자세 검사와 기억한 q→현재 q 구간 검사를 제공한다. 시작 q는 현재 Base/TCP/장면으로
+  다시 검사한다. 모델이 바뀌면 시작 q도 지운다. 경로 생성/시뮬레이션 재생은 구현하지 않는다.
+- 충돌/여유 위반 쌍과 거리/침투, 최근접 점, 검사 시점의 빨간 형상 윤곽/접점을 표시한다.
+  구간 실패의 윤곽은 현재 q와 다를 수 있으며 샘플 시점이라는 문구를 함께 표시한다.
+- 허용 쌍/근사 선택/여유거리/해상도는 프로젝트에 보관하고 Undo로 복구한다.
+  계산 중 입력을 잠그며 도중 장면/목표가 바뀐 worker 결과는 버린다.
+- 실제 GUI 7 tests 통과: IK 필터/목표 변경/적용/Undo, 전체 링크 접점과 revision 무효화,
+  양 끝은 통과하는 중간 구간 위반, 정책/허용 쌍 저장 복원, 지연 worker 결과 폐기,
+  부모 객체의 World 목표, S922 누락→명시적 근사.
+- 통합 **124 passed (25.19s)**, Ruff/pip check 통과. source GUI smoke도 S922/13 actors/
+  5객체/편집·파일 복원/IK 수렴/충돌 complete/구간 complete를 통과했다.
+  예제 작업대와 로봇 base의 접촉은 위반으로 표시되며 자동으로 허용하지 않는다.
