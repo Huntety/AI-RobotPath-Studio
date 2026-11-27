@@ -51,6 +51,8 @@ scooby==0.12.1
 setuptools==78.1.0
 shiboken6==6.11.2
 trimesh==5.2.2
+python-fcl==0.7.0.11
+Cython==3.3.2
 typing-inspection==0.4.5
 typing_extensions==4.16.0
 tzdata==2026.6

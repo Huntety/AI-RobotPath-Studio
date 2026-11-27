@@ -32,6 +32,10 @@ tests/는 계산과 GUI를 구분한다. docs/는 상태·규약·사양·로드
 PyBullet, LLM 및 제조사 코드 생성은 이후 Phase로 남긴다.
 
 ## 설계 기록
+- Phase 3 collision: SceneDocument의 CollisionSettings를 isolated FCLSceneChecker에 전달한다.
+  robot collision geometry/객체 shape와 FK가 원본이며 렌더러에서 형상/자세를 추정하지 않는다.
+  Mesh는 convex hull 근사로 명시한다. CAD visual fallback은 기본 꺼짐이다.
+  관절 구간은 sample에 상대 이동량 상한을 margin으로 더해 검사하며 예산 초과는 incomplete다.
 - Phase 3: TreeKinematics의 geometric Jacobian과 별도 BoundedIK가 같은 RobotModel/FK를 쓴다.
   IK는 bounded TRF, SO(3) log의 analytic derivative, 다중 초기값을 사용한다.
   실패/특이점/수렴 오차를 반환하고, 충돌 제약은 후보 accept 경계로 연결한다.

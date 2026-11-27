@@ -1,5 +1,10 @@
 # 개발 환경과 호환성 확인
 
+2026-11-27 Phase 3: PyBullet/Coal의 cp312/win_amd64 binary 탐색 실패를 재확인했다.
+대신 python-fcl 0.7.0.11 Windows wheel과 metadata 의존 Cython 3.3.2를 추가했다.
+공용 환경의 기존 NumPy/Qt/VTK 버전은 유지했으며 native 구체 거리와 pip check를 통과했다.
+기본 collision backend는 FCL이며 PyBullet 동역학은 미구현이다. docs/phase_03.md 참조.
+
 2026-11-27 Phase 2 최종 확인: 지정 공용 `../Scripts/python.exe --version`은 Python 3.12.10이다.
 이전 3.12.14 기록과 다르므로 현재 명령 출력이 기준이다. 가상환경/인터프리터를 새로 만들거나
 교체하지 않았다. robotstudio-ai만 0.2.0 editable로 갱신했고 pip check를 통과했다.

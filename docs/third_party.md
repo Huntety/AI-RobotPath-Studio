@@ -1,5 +1,9 @@
 # 배포 의존성
 
+Phase 3 충돌 검사는 python-fcl 0.7.0.11(MIT)의 Windows wheel을 사용한다.
+FCL(BSD), libccd(BSD)의 native binary와 해당 wheel의 license/metadata도 배포에 포함한다.
+Cython은 wheel metadata 의존성으로 설치하며 기존 GUI/수치 패키지는 변경하지 않는다.
+
 RobotStudio AI의 자체 제작 Generic URDF와 코드만 프로젝트 저장소에 포함한다.
 제조사 CAD/SDK/매뉴얼, 기존 회사 프로젝트 소스, 사용자 작업 장면은 포함하지 않는다.
 

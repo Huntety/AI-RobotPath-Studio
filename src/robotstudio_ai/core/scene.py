@@ -10,6 +10,7 @@ from uuid import UUID, uuid4
 import numpy as np
 from pydantic import Field, JsonValue, model_validator
 
+from robotstudio_ai.core.collision_settings import CollisionSettings
 from robotstudio_ai.core.schema import Finite, JointState, Pose, Record, Vec3
 from robotstudio_ai.core.transforms import Matrix, matrix_pose, pose_matrix
 
@@ -137,6 +138,7 @@ class SceneDocument(Record):
     robot: SceneRobot
     objects: tuple[SceneObject, ...] = Field(default=(), max_length=1000)
     assets: tuple[MeshAsset, ...] = ()
+    collision: CollisionSettings = CollisionSettings()
 
     @model_validator(mode="after")
     def graph_integrity(self):
@@ -350,7 +352,16 @@ class SceneManager:
                 break
             removed |= descendants
         objects = tuple(o for o in self._document.objects if str(o.id) not in removed)
-        self.replace(self._document.model_copy(update={"objects": objects}), "객체 삭제")
+        pairs = tuple(
+            pair
+            for pair in self._document.collision.allowed_pairs
+            if not any(f"object:{key}" in pair for key in removed)
+        )
+        collision = self._document.collision.model_copy(update={"allowed_pairs": pairs})
+        self.replace(
+            self._document.model_copy(update={"objects": objects, "collision": collision}),
+            "객체 삭제",
+        )
 
     def undo(self) -> None:
         if self._undo:

@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased — Phase 3
+- Task 3.2: FCL 자기/환경/부착물 충돌·거리·접점, 허용/자동 제외 쌍과 저장 정책.
+- 보수적 점 이동량 envelope를 사용하는 관절 구간 검사, 누락 형상/예산 초과 통과 금지.
+- 메시 convex hull/CAD 외형 명시적 근사. 전체 headless 핵심 99 passed.
 - Task 3.1: World geometric Jacobian, bounded 다중 초기값 IK, SO(3) 자세 미분, SVD 특이점 진단.
 - Jacobian/IK 및 기존 로봇 테스트 36 passed. 사용자 승인으로 Phase 3 시작, Phase 4는 대기.
 
