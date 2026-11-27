@@ -1,0 +1,2 @@
+# Install project runtime and optional test dependencies from pyproject.toml.
+-e .[dev]

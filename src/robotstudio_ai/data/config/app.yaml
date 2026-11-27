@@ -1,0 +1,13 @@
+robot:
+  urdf: ../robots/generic_6axis/robot.urdf
+  provenance:
+    model_id: generic_6axis_v1
+    display_name: Generic 6-Axis — SYNTHETIC
+    synthetic: true
+    source: Self-authored test geometry; not HITBOT S922 specifications
+    hardware_validated: false
+  tool_link: tool0
+  home_rad: [0.0, -0.7, 1.2, 0.0, 0.5, 0.0]
+  base: {position_m: [0, 0, 0], quaternion_xyzw: [0, 0, 0, 1]}
+  tool_offset: {position_m: [0, 0, 0], quaternion_xyzw: [0, 0, 0, 1]}
+frame_size_m: 0.12
