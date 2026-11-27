@@ -1,6 +1,6 @@
 # RobotStudio AI
 
-**Windows용 산업용 로봇 작업환경 편집기 · 안정 버전 0.2.0 · Phase 3 Task 3.1 완료**
+**Windows용 산업용 로봇 작업환경 편집기 · 안정 버전 0.2.0 · Phase 3 Task 3.1~3.2 완료**
 최종 갱신: 2026-11-27 (Asia/Seoul)
 
 HITBOT Z-Arm S922를 대상으로 개발하는 오프라인 프로그래밍(OLP) 플랫폼입니다.
@@ -26,14 +26,15 @@ git clone --branch feature/phase-03-kinematics-collision https://github.com/Hunt
 | Phase 0 | 환경·데이터 계약·단위/좌표계·Git/CI | 완료 |
 | Phase 1 | URDF·FK·관절/TCP GUI·공식 S922 CAD | 완료 |
 | Phase 2 | 작업환경 객체·3D 편집·프로젝트·Undo/Redo | 완료, 0.2.0 |
-| Phase 3 | IK·Jacobian·자기/환경/부착물 충돌 | 사용자 승인, IK/Jacobian 완료·충돌/GUI 진행 |
+| Phase 3 | IK·Jacobian·자기/환경/부착물 충돌 | 사용자 승인, IK/Jacobian·충돌 핵심 완료, GUI 진행 |
 | Phase 4~6 | 경로·궤적·파지·Pick & Place 시뮬레이션 | 예정 |
 | Phase 7~9 | 제조사 변환·LLM 작업 명세·MVP 검증 | 예정 |
 
 ## 지금 사용할 수 있는 기능
 
 - **Phase 3 핵심 API**: geometric Jacobian, 관절 한계 내 수치 IK와 특이점 진단을 추가했습니다.
-  GUI 연결과 충돌 검사는 진행 중이며 기존 EXE는 Phase 2입니다.
+  FCL 자기/환경/부착물 충돌·최소 거리·중간 구간 검사도 핵심 API로 제공합니다.
+  GUI 연결은 진행 중이며 기존 EXE는 Phase 2입니다.
   [Phase 3 구현·검증](https://github.com/Huntety/AI-RobotPath-Studio/blob/feature/phase-03-kinematics-collision/docs/phase_03.md)을 참고하세요.
 
 - **로봇 모델**: 자체 Generic URDF와 공식 HITBOT S922 V3.0 STEP 기반 CAD 모델을 전환합니다.
@@ -110,7 +111,8 @@ S922 프로젝트를 다른 PC에서 열려면 같은 로봇 모델을 별도로
 
 ## 검증 결과
 
-Task 3.1: IK/Jacobian 및 기존 로봇 테스트 **36 passed (2.37초)**, Ruff/pip check 통과.
+Task 3.2까지 전체 headless 핵심 **99 passed (7.25초)**, Ruff/pip check 통과.
+IK/Jacobian·실제 FCL·S922 근사/누락·부착물·얇은 장애물 구간을 검증했습니다.
 아래 전체/배포 결과는 이전 Phase 2 완료 시점의 검증이며 Phase 3 배포 검증과 구분합니다.
 
 | 검증 | 결과 |
@@ -136,8 +138,10 @@ Task 3.1: IK/Jacobian 및 기존 로봇 테스트 **36 passed (2.37초)**, Ruff/
 
 - S922 제어기 영점/양의 방향/실제 관절 한계, 보정·속도·가속도·질량/관성·충돌 형상은 미확정입니다.
   CAD 상대각 ±180°는 실제 제어기 한계가 아닙니다.
-- 충돌 검사·경로/궤적 계획·동역학·LLM·제조사 코드 출력은 아직 구현하지 않았습니다.
-  충돌 대상/고정/질량/작업 대상 플래그는 저장되는 메타데이터입니다.
+- 경로/궤적 계획·동역학·LLM·제조사 코드 출력은 아직 구현하지 않았습니다.
+  충돌 대상 플래그는 FCL 검사에 사용하며 고정/질량/작업 대상은 이후 기능용입니다.
+- S922는 충돌 형상 누락 시 통과하지 않습니다. 명시적 CAD 외형 근사는 convex hull이며
+  오목 영역이 막혀 과검출할 수 있습니다. 구간 검사는 이동량 상한을 추가한 보수적 envelope 검사입니다.
 - 최대 1,000객체/100단계 계층/100 Undo snapshot입니다. OBJ 재질/텍스처는 가져오지 않습니다.
   로봇 모델 전환은 환경 객체를 유지하고 Undo 이력을 초기화합니다.
 - 독립 실행 파일은 현재 PC에서 검증했습니다. 다른 Windows/GPU는 별도 확인이 필요합니다.
@@ -155,7 +159,7 @@ Task 3.1: IK/Jacobian 및 기존 로봇 테스트 **36 passed (2.37초)**, Ruff/
 - [S922 CAD 출처·변환·보정 한계](https://github.com/Huntety/AI-RobotPath-Studio/blob/feature/phase-03-kinematics-collision/docs/s922_cad.md)
 - [개발 규칙](https://github.com/Huntety/AI-RobotPath-Studio/blob/feature/phase-03-kinematics-collision/AGENTS.md)
 
-현재 Phase 3를 승인받아 진행 중입니다. 다음은 자기·환경·부착물 충돌 검사와 GUI 통합입니다.
+현재 Phase 3를 승인받아 진행 중입니다. 다음은 목표 TCP/IK/충돌/구간 검사 GUI와 통합 배포입니다.
 Windows wheel을 확인한 python-fcl을 사용합니다. S922 제어기 좌표 보정은 별도 자료가 필요합니다.
 
 작업이 끝날 때마다 이 README를 현재 상태로 다시 정리하고, `main`의 README도 즉시 갱신합니다.
